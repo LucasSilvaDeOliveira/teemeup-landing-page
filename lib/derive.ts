@@ -1,4 +1,4 @@
-import type { CourseData, TeeTimeDay, TeeTimeSlot } from "./course-data";
+import type { CourseData, Scorecard, TeeTimeDay, TeeTimeSlot } from "./course-data";
 
 /** Everything the page says about availability is computed here from the data. No hand-written copy per club. */
 
@@ -90,17 +90,47 @@ export function slotPrompt(name: string, date: string, slot: TeeTimeSlot) {
 }
 
 /** Example questions for Bob. Only questions the data can actually support are produced. */
+/**
+ * Example questions shown as links to the chat. Worded relative to when the golfer clicks ("tomorrow", "this weekend"),
+ * so a cached page never offers a date that has passed. Availability-based ones only appear when the window has
+ * matching times; Bob answers with live data either way.
+ * NOTE: the weather question assumes Bob can answer it (the CourseRev booking page already shows a forecast). Confirm with the app team.
+ */
 export function askBobPrompts(c: CourseData): string[] {
-  const day = c.ops.teeTimes.find((d) => openSlots(d).length > 0);
   const name = c.facts.name;
-  const out: string[] = [];
-  if (!day) return [`What tee times are available at ${name}?`];
-  const s = summarizeDay(day);
-  if (s.cheapest) out.push(`What is the cheapest tee time at ${name} on ${longDate(day.date)}?`);
-  if (s.hasMorning) out.push(`Find a morning tee time at ${name} on ${longDate(day.date)}`);
-  if (s.hasFour) out.push(`Book a tee time for 4 players at ${name} on ${longDate(day.date)}`);
-  if (s.hasTwilight) out.push(`Is there an afternoon tee time at ${name} on ${longDate(day.date)}?`);
-  return out.slice(0, 4);
+  const days = c.ops.teeTimes.map(summarizeDay).filter((s) => s.count > 0);
+  const any = (k: "hasMorning" | "hasFour" | "hasTwilight") => days.some((s) => s[k]);
+  const out: string[] = [`What tee times are open at ${name} tomorrow?`];
+  if (any("hasMorning")) out.push(any("hasFour") ? `Find a morning tee time for 4 players at ${name}` : `Find a morning tee time at ${name}`);
+  if (days.some((s) => s.minPrice !== null)) out.push(`What is the cheapest tee time at ${name} this week?`);
+  if (any("hasTwilight")) out.push(`Is there an afternoon tee time at ${name} this weekend?`);
+  if (c.facts.geo) out.push(`What will the weather be at ${name} tomorrow?`);
+  if (c.ops.policies.cancellation) out.push(`What is the cancellation policy at ${name}?`);
+  return out.slice(0, 6);
+}
+
+/**
+ * Checks a scorecard before it is shown. Returns the tees whose hole yards add up to the tee total (only those get a
+ * yards column) and the problems found, which the publication-gate banner lists. Bad data is dropped, never "fixed".
+ */
+export function checkScorecard(s: Scorecard, par: number | null) {
+  const issues: string[] = [];
+  const holesOk = s.holes.length === 9 || s.holes.length === 18;
+  if (!holesOk) issues.push(`scorecard has ${s.holes.length} holes`);
+  const parSum = s.holes.reduce((a, h) => a + h.par, 0);
+  const parOk = holesOk && (par === null || parSum === par);
+  if (holesOk && !parOk) issues.push(`hole pars add up to ${parSum}, course par is ${par}`);
+  const hcps = s.holes.map((h) => h.hcp).filter((x): x is number => x !== null);
+  const hcpOk = hcps.length === s.holes.length && new Set(hcps).size === hcps.length;
+  if (!hcpOk) issues.push("stroke index missing or repeated");
+  const yardTees = s.tees
+    .filter((t) => {
+      const sum = s.holes.reduce((a, h) => a + (h.yards[t.name] ?? NaN), 0);
+      if (sum !== t.yards) issues.push(`${t.name} tee: holes add up to ${Number.isNaN(sum) ? "n/a" : sum} yards, tee total is ${t.yards}`);
+      return sum === t.yards;
+    })
+    .map((t) => t.name);
+  return { showHoles: parOk, showHcp: hcpOk, yardTees, issues };
 }
 
 export function metaTitle(c: CourseData) {

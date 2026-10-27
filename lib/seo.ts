@@ -79,6 +79,15 @@ export function courseMarkdown(c: CourseData): string {
   if (f.website) lines.push(`- Club website: ${f.website}`);
   if (f.amenities.length) lines.push(`- Amenities: ${f.amenities.join(", ")}`);
   lines.push("");
+  if (f.scorecard?.tees.length) {
+    const r = (t: (typeof f.scorecard.tees)[number], g: "men" | "women") => {
+      const x = t.ratings.find((y) => y.gender === g);
+      return x ? `${x.rating.toFixed(1)} / ${x.slope}` : "–";
+    };
+    lines.push("## Tees", "", "| Tee | Yards | Men (rating / slope) | Women (rating / slope) |", "|---|---|---|---|");
+    for (const t of f.scorecard.tees) lines.push(`| ${t.name} | ${t.yards} | ${r(t, "men")} | ${r(t, "women")} |`);
+    lines.push("", f.scorecard.sourceNote, "");
+  }
   for (const day of c.ops.teeTimes) {
     const s = summarizeDay(day);
     if (s.count === 0) continue;

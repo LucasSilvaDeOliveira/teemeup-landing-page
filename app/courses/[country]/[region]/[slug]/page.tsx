@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+import { Fragment, type CSSProperties } from "react";
 import Image from "next/image";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -8,7 +8,7 @@ import { BRAND, absoluteUrl, coursePath, indexingAllowed, showGate } from "@/lib
 import { indexabilityProblems } from "@/lib/course-data";
 import { contourPaths } from "@/lib/contours";
 import { getCourse, getNearby, listCourses } from "@/lib/courses";
-import { askBobPrompts, chatLink, daySentence, formatPhone, formatTime, longDate, metaDescription, milesBetween, parseDate, metaTitle, money, openSlots, slotPrompt, summarizeDay } from "@/lib/derive";
+import { askBobPrompts, chatLink, checkScorecard, daySentence, formatPhone, formatTime, longDate, metaDescription, milesBetween, parseDate, metaTitle, money, openSlots, slotPrompt, summarizeDay } from "@/lib/derive";
 import { courseJsonLd, jsonLdString } from "@/lib/seo";
 import { resolveAccent } from "@/lib/theme";
 
@@ -86,6 +86,13 @@ export default async function CoursePage({ params }: Props) {
     .sort((a, b) => (a.miles ?? 1e9) - (b.miles ?? 1e9));
   const photo = f.photos[0] ?? null;
   const bobGeneral = chatLink(c, { q: `Find me a tee time at ${f.name}` });
+  const card = f.scorecard ?? null;
+  const cardCheck = card ? checkScorecard(card, f.par) : null;
+  const teeYards = card?.tees.map((t) => t.yards) ?? [];
+  const yardRange = teeYards.length ? { min: Math.min(...teeYards), max: Math.max(...teeYards) } : f.optional?.yardsMin && f.optional?.yardsMax ? { min: f.optional.yardsMin, max: f.optional.yardsMax } : null;
+  const rateCell = (r?: { rating: number; slope: number }) => (r ? `${r.rating.toFixed(1)} / ${r.slope}` : "–");
+  const sumYards = (from: number, to: number, tee: string) => card!.holes.slice(from, to).reduce((a, h) => a + (h.yards[tee] ?? 0), 0);
+  const sumPar = (from: number, to: number) => card!.holes.slice(from, to).reduce((a, h) => a + h.par, 0);
 
   return (
     <>
@@ -93,6 +100,7 @@ export default async function CoursePage({ params }: Props) {
         <div className="gate">
           Publication gate: {problems.length === 0 ? "indexable" : `noindex (${problems.join("; ")})`}
           {!indexingAllowed && " · Site-wide noindex (no NEXT_PUBLIC_SITE_URL, or NEXT_PUBLIC_NOINDEX=1)"}
+          {cardCheck && cardCheck.issues.length > 0 && ` · Scorecard data dropped: ${cardCheck.issues.join("; ")}`}
         </div>
       )}
       <div className="page" style={{ "--accent": theme.accent, "--accent-hover": theme.hover } as CSSProperties}>
@@ -175,7 +183,7 @@ export default async function CoursePage({ params }: Props) {
                     <dt>Holes</dt><dd>{f.holes}{f.par ? ` · par ${f.par}` : ""}</dd>
                     {f.designer && (<><dt>Architect</dt><dd>{f.designer}</dd></>)}
                     {f.yearOpened && (<><dt>Opened</dt><dd>{f.yearOpened}</dd></>)}
-                    {f.optional?.yardsMin && f.optional?.yardsMax && (<><dt>Tees</dt><dd>{f.optional.yardsMin.toLocaleString("en-US")}–{f.optional.yardsMax.toLocaleString("en-US")} yards</dd></>)}
+                    {yardRange && (<><dt>Tees</dt><dd>{yardRange.min.toLocaleString("en-US")}–{yardRange.max.toLocaleString("en-US")} yards</dd></>)}
                     {f.website && (<><dt>Club website</dt><dd><a href={f.website} rel="noopener">{f.website.replace(/^https?:\/\//, "")}</a></dd></>)}
                   </dl>
                   <p className="asof"><a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${f.name} ${f.address.street} ${f.city} ${f.region}`)}`} rel="noopener">Get directions</a></p>
@@ -199,6 +207,69 @@ export default async function CoursePage({ params }: Props) {
                 </div>
               </div>
             </section>
+
+            {card && cardCheck && (
+              <section className="block" id="scorecard">
+                <h2>{f.name} tees and scorecard</h2>
+                <p className="sub">Yards, Course Rating and Slope Rating for each tee.</p>
+                <div className="cardgrid">
+                <div className="tablewrap">
+                  <table className="card">
+                    <caption className="sr-only">Tees at {f.name} with yardage, Course Rating and Slope Rating</caption>
+                    <thead><tr><th scope="col">Tee</th><th scope="col">Yards</th><th scope="col">Men</th><th scope="col">Women</th></tr></thead>
+                    <tbody>
+                      {card.tees.map((t) => (
+                        <tr key={t.name}>
+                          <th scope="row">{t.name}</th>
+                          <td>{t.yards.toLocaleString("en-US")}</td>
+                          <td>{rateCell(t.ratings.find((r) => r.gender === "men"))}</td>
+                          <td>{rateCell(t.ratings.find((r) => r.gender === "women"))}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                {cardCheck.showHoles && (
+                  <div className="tablewrap">
+                    <table className="card holes">
+                      <caption className="sr-only">{`Hole-by-hole par${cardCheck.showHcp ? ", stroke index" : ""}${cardCheck.yardTees.length ? " and yards" : ""} at ${f.name}`}</caption>
+                      <thead>
+                        <tr>
+                          <th scope="col">Hole</th><th scope="col">Par</th>
+                          {cardCheck.showHcp && <th scope="col">Hcp</th>}
+                          {cardCheck.yardTees.map((t) => <th scope="col" key={t}>{t}</th>)}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {card.holes.map((h, i) => (
+                          <Fragment key={h.number}>
+                            <tr>
+                              <th scope="row">{h.number}</th><td>{h.par}</td>
+                              {cardCheck.showHcp && <td>{h.hcp}</td>}
+                              {cardCheck.yardTees.map((t) => <td key={t}>{h.yards[t]}</td>)}
+                            </tr>
+                            {card.holes.length === 18 && (i === 8 || i === 17) && (
+                              <tr className="subtotal">
+                                <th scope="row">{i === 8 ? "Out" : "In"}</th><td>{sumPar(i - 8, i + 1)}</td>
+                                {cardCheck.showHcp && <td></td>}
+                                {cardCheck.yardTees.map((t) => <td key={t}>{sumYards(i - 8, i + 1, t).toLocaleString("en-US")}</td>)}
+                              </tr>
+                            )}
+                          </Fragment>
+                        ))}
+                        <tr className="subtotal">
+                          <th scope="row">Total</th><td>{sumPar(0, card.holes.length)}</td>
+                          {cardCheck.showHcp && <td></td>}
+                          {cardCheck.yardTees.map((t) => <td key={t}>{sumYards(0, card.holes.length, t).toLocaleString("en-US")}</td>)}
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+                </div>
+                <p className="asof">{card.sourceNote}</p>
+              </section>
+            )}
 
             {c.ops.faq.length > 0 && (
               <section className="block">

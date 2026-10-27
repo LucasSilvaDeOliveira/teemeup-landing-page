@@ -1,4 +1,4 @@
-import type { CourseData, TeeTimeSlot } from "./course-data";
+import type { CourseData, HoleRow, Scorecard, TeeTimeSlot } from "./course-data";
 
 /**
  * Example fixture: Highland Creek Golf Club (Charlotte, NC).
@@ -35,6 +35,56 @@ const DAY_29: [string, number, number][] = [
 ];
 const toSlots = (rows: [string, number, number][]): TeeTimeSlot[] => rows.map(([time, priceUsd, spots]) => ({ time, priceUsd, spots, holes: 18, cart: null }));
 
+/** Builds hole rows from per-hole lists (par, stroke index, and yards per tee, in hole order). */
+const toHoles = (par: number[], hcp: number[], yards: Record<string, number[]>): HoleRow[] =>
+  par.map((p, i) => ({ number: i + 1, par: p, hcp: hcp[i] ?? null, yards: Object.fromEntries(Object.entries(yards).map(([t, ys]) => [t, ys[i]])) }));
+
+// EXAMPLE DATA. Scorecards come from OpenGolfAPI (read 2026-10-27), which is NOT a recommended source yet: the
+// Tradition card has hole yards that do not add up to the tee totals, and Highland Creek's Blue rating/slope differs
+// from the one on TeeOff. The page runs checkScorecard() and drops what fails. The real source is to be decided.
+const OGA_NOTE = "Scorecard: OpenGolfAPI, © OpenStreetMap contributors (ODbL). Example data, not verified with the club.";
+
+const HIGHLAND_CREEK_CARD: Scorecard = {
+  tees: [
+    { name: "Gold", yards: 7043, ratings: [{ gender: "men", rating: 74, slope: 137 }] },
+    { name: "Blue", yards: 6520, ratings: [{ gender: "men", rating: 71.5, slope: 136 }] },
+    { name: "White", yards: 6001, ratings: [{ gender: "men", rating: 68.6, slope: 130 }, { gender: "women", rating: 74.9, slope: 140 }] },
+    { name: "Red", yards: 5080, ratings: [{ gender: "men", rating: 64.9, slope: 123 }, { gender: "women", rating: 69.8, slope: 134 }] },
+  ],
+  holes: toHoles(
+    [4, 5, 3, 4, 4, 3, 5, 4, 4, 4, 3, 5, 4, 4, 4, 4, 3, 5],
+    [7, 17, 15, 1, 11, 9, 13, 5, 3, 14, 8, 6, 4, 16, 2, 10, 12, 18],
+    {
+      Gold: [405, 535, 196, 419, 396, 233, 562, 393, 402, 405, 212, 560, 398, 400, 446, 395, 199, 487],
+      Blue: [368, 510, 165, 392, 370, 211, 531, 375, 372, 373, 188, 542, 360, 369, 409, 374, 151, 460],
+      White: [333, 483, 127, 364, 340, 178, 510, 370, 320, 334, 167, 527, 332, 333, 364, 327, 140, 452],
+      Red: [267, 421, 92, 338, 311, 136, 470, 287, 275, 255, 116, 446, 288, 292, 303, 272, 111, 400],
+    },
+  ),
+  sourceNote: OGA_NOTE,
+};
+
+const TRADITION_CARD: Scorecard = {
+  tees: [
+    { name: "Gold", yards: 6978, ratings: [{ gender: "men", rating: 72.6, slope: 140 }] },
+    { name: "Green", yards: 6484, ratings: [{ gender: "men", rating: 70.3, slope: 132 }] },
+    { name: "White", yards: 6121, ratings: [{ gender: "men", rating: 68.4, slope: 124 }, { gender: "women", rating: 73.8, slope: 137 }] },
+    { name: "Red", yards: 5443, ratings: [{ gender: "women", rating: 69.6, slope: 125 }] },
+  ],
+  holes: toHoles(
+    [4, 4, 5, 4, 3, 4, 4, 3, 5, 4, 3, 4, 4, 5, 3, 4, 4, 5],
+    [5, 1, 9, 3, 7, 11, 15, 17, 13, 10, 12, 2, 6, 16, 14, 4, 8, 18],
+    {
+      // These add up to 6,597 / 6,206 / 5,738 / 4,844, not to the tee totals above. Kept as delivered by the source.
+      Gold: [385, 436, 503, 418, 199, 361, 343, 142, 477, 384, 223, 446, 372, 483, 159, 372, 387, 507],
+      Green: [362, 414, 485, 396, 174, 324, 326, 129, 457, 356, 196, 424, 362, 463, 140, 354, 365, 479],
+      White: [342, 373, 449, 370, 160, 315, 316, 117, 430, 341, 162, 342, 329, 438, 132, 332, 331, 459],
+      Red: [315, 348, 368, 292, 123, 266, 267, 114, 329, 309, 133, 280, 291, 347, 108, 265, 301, 388],
+    },
+  ),
+  sourceNote: OGA_NOTE,
+};
+
 export const highlandCreek: CourseData = {
   facts: {
     slug: "highland-creek-golf-club",
@@ -66,6 +116,7 @@ export const highlandCreek: CourseData = {
     logoUrl: null,
     themeColor: "#0B6B3A", // TODO: placeholder, confirm the club's color
     optional: { yardsMin: 5080, yardsMax: 7000 },
+    scorecard: HIGHLAND_CREEK_CARD,
   },
   ops: {
     teeTimes: [
@@ -98,6 +149,7 @@ export const highlandCreek: CourseData = {
     phone: { source: "highlandcreekgolfclub.com", retrievedOn: "2026-10-23" },
     teeTimes: { source: "highlandcreekgolfclub.bookings.v2.courserev.ai (snapshot)", retrievedOn: "2026-10-27" },
     policies: { source: "highlandcreekgolfclub.com/course-rates (page dated 2025-03-27)", retrievedOn: "2026-10-23" },
+    scorecard: { source: "OpenGolfAPI /api/v1/courses/{id}/tees and /holes (example; source not recommended yet)", retrievedOn: "2026-10-27" },
   },
 };
 
@@ -159,6 +211,7 @@ export const tradition: CourseData = {
     photos: [{ url: "https://storage.googleapis.com/courserev-cdn/course/org-banner-1784753398083.jpeg", alt: "The Tradition Golf Club, Charlotte, North Carolina", width: 1500, height: 750 }],
     logoUrl: null,
     themeColor: null, // TODO: not known; falls back to the Teemeup purple
+    scorecard: TRADITION_CARD,
   },
   ops: {
     teeTimes: [
@@ -186,5 +239,6 @@ export const tradition: CourseData = {
     photos: { source: "thetraditiongolfclub.bookings.v2.courserev.ai (banner, CourseRev CDN)", retrievedOn: "2026-10-23" },
     teeTimes: { source: "thetraditiongolfclub.bookings.v2.courserev.ai (snapshot)", retrievedOn: "2026-10-27" },
     policies: { source: "thetraditiongolfclub.bookings.v2.courserev.ai (player count offered)", retrievedOn: "2026-10-23" },
+    scorecard: { source: "OpenGolfAPI /api/v1/courses/{id}/tees and /holes (example; source not recommended yet)", retrievedOn: "2026-10-27" },
   },
 };

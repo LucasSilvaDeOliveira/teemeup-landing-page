@@ -128,3 +128,15 @@ footer.foot { border-top: 1px solid var(--line); padding: 28px 0 40px; font-size
   @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
   .rise { animation: rise 0.7s var(--ease) both; }
 }
+
+/* Tees and scorecard */
+.tablewrap { overflow-x: auto; margin-top: 16px; }
+table.card { border-collapse: collapse; font-size: 14px; font-variant-numeric: tabular-nums; background: var(--surface); }
+table.card th, table.card td { padding: 7px 8px; text-align: right; border-bottom: 1px solid var(--line); white-space: nowrap; }
+table.card th:first-child { text-align: left; padding-left: 0; }
+table.card thead th { color: var(--muted); font-weight: 500; }
+table.card tbody th { font-weight: 600; }
+table.card tr.subtotal th, table.card tr.subtotal td { font-weight: 600; }
+@media (min-width: 768px) { table.card { font-size: 15px; } table.card th, table.card td { padding: 8px 16px; } }
+.cardgrid { display: grid; }
+@media (min-width: 900px) { .cardgrid { grid-template-columns: auto auto; justify-content: start; align-items: start; gap: 0 64px; } }
