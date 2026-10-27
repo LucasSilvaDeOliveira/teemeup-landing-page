@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Qr } from "@/components/Qr";
 import { TeeTimeBrowser, type DayView } from "@/components/TeeTimeBrowser";
-import { BRAND, absoluteUrl, coursePath, showGate } from "@/lib/config";
+import { BRAND, absoluteUrl, coursePath, indexingAllowed, showGate } from "@/lib/config";
 import { indexabilityProblems } from "@/lib/course-data";
 import { contourPaths } from "@/lib/contours";
 import { getCourse, getNearby, listCourses } from "@/lib/courses";
@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title,
     description,
-    robots: { index: indexable, follow: true },
+    robots: { index: indexable && indexingAllowed, follow: true },
     alternates: {
       canonical: canonical ?? undefined,
       types: { "text/markdown": `${path}/index.md` },
@@ -92,6 +92,7 @@ export default async function CoursePage({ params }: Props) {
       {showGate && (
         <div className="gate">
           Publication gate: {problems.length === 0 ? "indexable" : `noindex (${problems.join("; ")})`}
+          {!indexingAllowed && " · Site-wide noindex (no NEXT_PUBLIC_SITE_URL, or NEXT_PUBLIC_NOINDEX=1)"}
         </div>
       )}
       <div className="page" style={{ "--accent": theme.accent, "--accent-hover": theme.hover } as CSSProperties}>

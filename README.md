@@ -22,7 +22,7 @@ npm run build && npm start
 | `lib/courses.ts` | Replace `getCourse()` and `listCourses()` with the real source. Return `null` for unknown courses, throw on transient failures. The page revalidates every 5 minutes (`revalidate = 300`). |
 | `lib/fixtures.ts` | Example data (Highland Creek) and where each field came from. Tee times are a snapshot of the CourseRev v2 page for 27, 28 and 29 Oct 2026, a placeholder for the real feed. |
 | `lib/derive.ts` `chatLink()` | The query parameters sent to the web chat (`course`, `q`, `date`, `time`) are a proposal. Adapt them to the real deep link. |
-| `.env` | `NEXT_PUBLIC_SITE_URL` (public origin, no trailing slash). While empty: no canonical, empty sitemap, no absolute URLs in JSON-LD. Never guess a domain. |
+| `.env` | `NEXT_PUBLIC_SITE_URL` (public origin, no trailing slash). While empty: no canonical, empty sitemap, no absolute URLs in JSON-LD, and the whole site is `noindex`. Never guess a domain. `NEXT_PUBLIC_NOINDEX=1` keeps the site `noindex` even with a domain (staging). |
 | `teemeup.deepLinkUrl`, store URLs, `chatBaseUrl` | Placeholders in the fixture. |
 | Footer links | Terms and Privacy are `#`. |
 | `app/page.tsx` | Development redirect to `/courses`. Replace before production. |
