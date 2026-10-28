@@ -1,6 +1,7 @@
 import type { CourseData } from "./course-data";
 import { BRAND, absoluteUrl, coursePath } from "./config";
 import { chatLink, formatTime, longDate, openSlots, summarizeDay } from "./derive";
+import { regionName, regionPath } from "./regions";
 
 /** Structured data for a course page. Fields without data are left out, never filled with guesses. */
 export function courseJsonLd(c: CourseData) {
@@ -41,7 +42,7 @@ export function courseJsonLd(c: CourseData) {
         itemListElement: [
           { "@type": "ListItem", position: 1, name: BRAND.name, item: absoluteUrl("/") ?? undefined },
           { "@type": "ListItem", position: 2, name: "Courses", item: absoluteUrl("/courses") ?? undefined },
-          { "@type": "ListItem", position: 3, name: f.region.toUpperCase(), item: absoluteUrl(`/courses/${f.country}/${f.region}`) ?? undefined },
+          { "@type": "ListItem", position: 3, name: regionName(f.country, f.region), item: absoluteUrl(regionPath(f.country, f.region)) ?? undefined },
           { "@type": "ListItem", position: 4, name: f.name, item: url },
         ],
       },
@@ -79,15 +80,6 @@ export function courseMarkdown(c: CourseData): string {
   if (f.website) lines.push(`- Club website: ${f.website}`);
   if (f.amenities.length) lines.push(`- Amenities: ${f.amenities.join(", ")}`);
   lines.push("");
-  if (f.scorecard?.tees.length) {
-    const r = (t: (typeof f.scorecard.tees)[number], g: "men" | "women") => {
-      const x = t.ratings.find((y) => y.gender === g);
-      return x ? `${x.rating.toFixed(1)} / ${x.slope}` : "–";
-    };
-    lines.push("## Tees", "", "| Tee | Yards | Men (rating / slope) | Women (rating / slope) |", "|---|---|---|---|");
-    for (const t of f.scorecard.tees) lines.push(`| ${t.name} | ${t.yards} | ${r(t, "men")} | ${r(t, "women")} |`);
-    lines.push("", f.scorecard.sourceNote, "");
-  }
   for (const day of c.ops.teeTimes) {
     const s = summarizeDay(day);
     if (s.count === 0) continue;
@@ -112,4 +104,22 @@ export function courseMarkdown(c: CourseData): string {
     for (const q of c.ops.faq) lines.push(`**${q.q}**`, "", q.a, "");
   }
   return lines.join("\n");
+}
+
+/** JSON-LD for a hub: the breadcrumb and the list of course pages it links to. */
+export function hubJsonLd(crumbs: { name: string; path: string }[], items: { name: string; path: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: crumbs.map((c, i) => ({ "@type": "ListItem", position: i + 1, name: c.name, item: absoluteUrl(c.path) ?? undefined })),
+      },
+      {
+        "@type": "ItemList",
+        numberOfItems: items.length,
+        itemListElement: items.map((x, i) => ({ "@type": "ListItem", position: i + 1, name: x.name, url: absoluteUrl(x.path) ?? undefined })),
+      },
+    ],
+  };
 }

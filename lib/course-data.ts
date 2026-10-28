@@ -40,32 +40,6 @@ export type CourseFacts = {
     yardsMax?: number;
     grass?: string;
   };
-  /** Tees and hole-by-hole card. Optional; the page drops anything that fails the checks in `checkScorecard`. */
-  scorecard?: Scorecard | null;
-};
-
-export type TeeSet = {
-  /** As the club names it ("Blue", "Gold"). Also the key in `HoleRow.yards`. */
-  name: string;
-  yards: number;
-  /** USGA Course Rating and Slope Rating, per gender when published. */
-  ratings: { gender: "men" | "women"; rating: number; slope: number }[];
-};
-
-export type HoleRow = {
-  number: number;
-  par: number;
-  /** Stroke index (handicap), 1 = hardest. */
-  hcp: number | null;
-  /** Yards per tee, keyed by `TeeSet.name`. */
-  yards: Record<string, number>;
-};
-
-export type Scorecard = {
-  tees: TeeSet[];
-  holes: HoleRow[];
-  /** Attribution shown under the card, as the data licence requires. */
-  sourceNote: string;
 };
 
 // ---------- 2. Operations ----------

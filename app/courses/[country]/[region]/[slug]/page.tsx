@@ -1,15 +1,18 @@
-import { Fragment, type CSSProperties } from "react";
+import type { CSSProperties } from "react";
 import Image from "next/image";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { CourseCard } from "@/components/CourseCard";
 import { Qr } from "@/components/Qr";
 import { TeeTimeBrowser, type DayView } from "@/components/TeeTimeBrowser";
 import { BRAND, absoluteUrl, coursePath, indexingAllowed, showGate } from "@/lib/config";
 import { indexabilityProblems } from "@/lib/course-data";
 import { contourPaths } from "@/lib/contours";
 import { getCourse, getNearby, listCourses } from "@/lib/courses";
-import { askBobPrompts, chatLink, checkScorecard, daySentence, formatPhone, formatTime, longDate, metaDescription, milesBetween, parseDate, metaTitle, money, openSlots, slotPrompt, summarizeDay } from "@/lib/derive";
+import { askBobPrompts, chatLink, daySentence, formatPhone, formatTime, longDate, metaDescription, milesBetween, parseDate, metaTitle, money, openSlots, slotPrompt, summarizeDay } from "@/lib/derive";
 import { courseJsonLd, jsonLdString } from "@/lib/seo";
+import { courseCard } from "@/lib/hub";
+import { regionName, regionPath } from "@/lib/regions";
 import { resolveAccent } from "@/lib/theme";
 
 // Tee times change during the day: regenerate the HTML at most every 5 minutes.
@@ -75,24 +78,11 @@ export default async function CoursePage({ params }: Props) {
   });
   const nearby = (await getNearby(c))
     .filter((n) => indexabilityProblems(n).length === 0)
-    .map((n) => {
-      const day = n.ops.teeTimes.find((d) => openSlots(d).length > 0);
-      return {
-        n,
-        miles: f.geo && n.facts.geo ? milesBetween(f.geo, n.facts.geo) : null,
-        open: day ? { count: openSlots(day).length, label: longDate(day.date) } : null,
-      };
-    })
+    .map((n) => ({ n, miles: f.geo && n.facts.geo ? milesBetween(f.geo, n.facts.geo) : null }))
     .sort((a, b) => (a.miles ?? 1e9) - (b.miles ?? 1e9));
   const photo = f.photos[0] ?? null;
   const bobGeneral = chatLink(c, { q: `Find me a tee time at ${f.name}` });
-  const card = f.scorecard ?? null;
-  const cardCheck = card ? checkScorecard(card, f.par) : null;
-  const teeYards = card?.tees.map((t) => t.yards) ?? [];
-  const yardRange = teeYards.length ? { min: Math.min(...teeYards), max: Math.max(...teeYards) } : f.optional?.yardsMin && f.optional?.yardsMax ? { min: f.optional.yardsMin, max: f.optional.yardsMax } : null;
-  const rateCell = (r?: { rating: number; slope: number }) => (r ? `${r.rating.toFixed(1)} / ${r.slope}` : "–");
-  const sumYards = (from: number, to: number, tee: string) => card!.holes.slice(from, to).reduce((a, h) => a + (h.yards[tee] ?? 0), 0);
-  const sumPar = (from: number, to: number) => card!.holes.slice(from, to).reduce((a, h) => a + h.par, 0);
+  const yardRange = f.optional?.yardsMin && f.optional?.yardsMax ? { min: f.optional.yardsMin, max: f.optional.yardsMax } : null;
 
   return (
     <>
@@ -100,7 +90,6 @@ export default async function CoursePage({ params }: Props) {
         <div className="gate">
           Publication gate: {problems.length === 0 ? "indexable" : `noindex (${problems.join("; ")})`}
           {!indexingAllowed && " · Site-wide noindex (no NEXT_PUBLIC_SITE_URL, or NEXT_PUBLIC_NOINDEX=1)"}
-          {cardCheck && cardCheck.issues.length > 0 && ` · Scorecard data dropped: ${cardCheck.issues.join("; ")}`}
         </div>
       )}
       <div className="page" style={{ "--accent": theme.accent, "--accent-hover": theme.hover } as CSSProperties}>
@@ -119,7 +108,7 @@ export default async function CoursePage({ params }: Props) {
             <nav className="crumbs" aria-label="Breadcrumb">
               <ol>
                 <li><a href="/courses">Courses</a></li>
-                <li><a href={`/courses/${f.country}/${f.region}`}>{f.region.toUpperCase()}</a></li>
+                <li><a href={regionPath(f.country, f.region)}>{regionName(f.country, f.region)}</a></li>
                 <li aria-current="page">{f.name}</li>
               </ol>
             </nav>
@@ -208,69 +197,6 @@ export default async function CoursePage({ params }: Props) {
               </div>
             </section>
 
-            {card && cardCheck && (
-              <section className="block" id="scorecard">
-                <h2>{f.name} tees and scorecard</h2>
-                <p className="sub">Yards, Course Rating and Slope Rating for each tee.</p>
-                <div className="cardgrid">
-                <div className="tablewrap">
-                  <table className="card">
-                    <caption className="sr-only">Tees at {f.name} with yardage, Course Rating and Slope Rating</caption>
-                    <thead><tr><th scope="col">Tee</th><th scope="col">Yards</th><th scope="col">Men</th><th scope="col">Women</th></tr></thead>
-                    <tbody>
-                      {card.tees.map((t) => (
-                        <tr key={t.name}>
-                          <th scope="row">{t.name}</th>
-                          <td>{t.yards.toLocaleString("en-US")}</td>
-                          <td>{rateCell(t.ratings.find((r) => r.gender === "men"))}</td>
-                          <td>{rateCell(t.ratings.find((r) => r.gender === "women"))}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-                {cardCheck.showHoles && (
-                  <div className="tablewrap">
-                    <table className="card holes">
-                      <caption className="sr-only">{`Hole-by-hole par${cardCheck.showHcp ? ", stroke index" : ""}${cardCheck.yardTees.length ? " and yards" : ""} at ${f.name}`}</caption>
-                      <thead>
-                        <tr>
-                          <th scope="col">Hole</th><th scope="col">Par</th>
-                          {cardCheck.showHcp && <th scope="col">Hcp</th>}
-                          {cardCheck.yardTees.map((t) => <th scope="col" key={t}>{t}</th>)}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {card.holes.map((h, i) => (
-                          <Fragment key={h.number}>
-                            <tr>
-                              <th scope="row">{h.number}</th><td>{h.par}</td>
-                              {cardCheck.showHcp && <td>{h.hcp}</td>}
-                              {cardCheck.yardTees.map((t) => <td key={t}>{h.yards[t]}</td>)}
-                            </tr>
-                            {card.holes.length === 18 && (i === 8 || i === 17) && (
-                              <tr className="subtotal">
-                                <th scope="row">{i === 8 ? "Out" : "In"}</th><td>{sumPar(i - 8, i + 1)}</td>
-                                {cardCheck.showHcp && <td></td>}
-                                {cardCheck.yardTees.map((t) => <td key={t}>{sumYards(i - 8, i + 1, t).toLocaleString("en-US")}</td>)}
-                              </tr>
-                            )}
-                          </Fragment>
-                        ))}
-                        <tr className="subtotal">
-                          <th scope="row">Total</th><td>{sumPar(0, card.holes.length)}</td>
-                          {cardCheck.showHcp && <td></td>}
-                          {cardCheck.yardTees.map((t) => <td key={t}>{sumYards(0, card.holes.length, t).toLocaleString("en-US")}</td>)}
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                )}
-                </div>
-                <p className="asof">{card.sourceNote}</p>
-              </section>
-            )}
-
             {c.ops.faq.length > 0 && (
               <section className="block">
                 <h2>Questions golfers ask</h2>
@@ -287,23 +213,11 @@ export default async function CoursePage({ params }: Props) {
               <section className="block" id="nearby">
                 <h2>Golf courses near {f.name}</h2>
                 <ul className="nearby">
-                  {nearby.map(({ n, miles, open }) => (
-                    <li key={n.facts.slug}>
-                      <a className="ncard" href={coursePath(n.facts)}>
-                        {n.facts.photos[0] && (
-                          <span className="nthumb">
-                            <Image src={n.facts.photos[0].url} alt={n.facts.photos[0].alt} width={n.facts.photos[0].width} height={n.facts.photos[0].height} sizes="(min-width: 768px) 360px, calc(100vw - 40px)" />
-                          </span>
-                        )}
-                        <span className="nbody">
-                          <b>{n.facts.name}</b>
-                          <span>{n.facts.city}, {n.facts.region.toUpperCase()}{miles !== null ? ` · ${miles < 10 ? miles.toFixed(1) : Math.round(miles)} miles away` : ""}</span>
-                          {open && <span>{open.count} open tee time{open.count === 1 ? "" : "s"} on {open.label}</span>}
-                        </span>
-                      </a>
-                    </li>
+                  {nearby.map(({ n, miles }) => (
+                    <li key={n.facts.slug}><CourseCard card={courseCard(n, miles)} /></li>
                   ))}
                 </ul>
+                <p className="asof"><a href={regionPath(f.country, f.region)}>See all golf courses in {regionName(f.country, f.region)}</a></p>
               </section>
             )}
           </main>

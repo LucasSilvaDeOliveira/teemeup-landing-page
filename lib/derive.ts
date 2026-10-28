@@ -1,4 +1,4 @@
-import type { CourseData, Scorecard, TeeTimeDay, TeeTimeSlot } from "./course-data";
+import type { CourseData, TeeTimeDay, TeeTimeSlot } from "./course-data";
 
 /** Everything the page says about availability is computed here from the data. No hand-written copy per club. */
 
@@ -26,7 +26,7 @@ export function formatTime(t: string) {
 }
 
 export const money = (n: number) => `$${n.toFixed(2)}`;
-const moneyShort = (n: number) => (Number.isInteger(n) ? `$${n}` : `$${n.toFixed(2)}`);
+export const moneyShort = (n: number) => (Number.isInteger(n) ? `$${n}` : `$${n.toFixed(2)}`);
 
 export function formatPhone(e164: string) {
   const m = e164.match(/^\+1(\d{3})(\d{3})(\d{4})$/);
@@ -107,30 +107,6 @@ export function askBobPrompts(c: CourseData): string[] {
   if (c.facts.geo) out.push(`What will the weather be at ${name} tomorrow?`);
   if (c.ops.policies.cancellation) out.push(`What is the cancellation policy at ${name}?`);
   return out.slice(0, 6);
-}
-
-/**
- * Checks a scorecard before it is shown. Returns the tees whose hole yards add up to the tee total (only those get a
- * yards column) and the problems found, which the publication-gate banner lists. Bad data is dropped, never "fixed".
- */
-export function checkScorecard(s: Scorecard, par: number | null) {
-  const issues: string[] = [];
-  const holesOk = s.holes.length === 9 || s.holes.length === 18;
-  if (!holesOk) issues.push(`scorecard has ${s.holes.length} holes`);
-  const parSum = s.holes.reduce((a, h) => a + h.par, 0);
-  const parOk = holesOk && (par === null || parSum === par);
-  if (holesOk && !parOk) issues.push(`hole pars add up to ${parSum}, course par is ${par}`);
-  const hcps = s.holes.map((h) => h.hcp).filter((x): x is number => x !== null);
-  const hcpOk = hcps.length === s.holes.length && new Set(hcps).size === hcps.length;
-  if (!hcpOk) issues.push("stroke index missing or repeated");
-  const yardTees = s.tees
-    .filter((t) => {
-      const sum = s.holes.reduce((a, h) => a + (h.yards[t.name] ?? NaN), 0);
-      if (sum !== t.yards) issues.push(`${t.name} tee: holes add up to ${Number.isNaN(sum) ? "n/a" : sum} yards, tee total is ${t.yards}`);
-      return sum === t.yards;
-    })
-    .map((t) => t.name);
-  return { showHoles: parOk, showHcp: hcpOk, yardTees, issues };
 }
 
 export function metaTitle(c: CourseData) {

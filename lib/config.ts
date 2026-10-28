@@ -8,6 +8,19 @@ export const siteUrl: string | null = raw || null;
  */
 export const indexingAllowed: boolean = siteUrl !== null && process.env.NEXT_PUBLIC_NOINDEX !== "1";
 
+/**
+ * Brand-level links for pages that are not about one course (the hubs). PLACEHOLDERS: the app team confirms them.
+ * Course pages use the per-course values in `teemeup` (deep link, chat base).
+ */
+export const APP = {
+  chatBaseUrl: "https://web.teemeup.example",
+  appStoreUrl: "https://apps.apple.com/app/id0000000000",
+  playStoreUrl: "https://play.google.com/store/apps/details?id=example.placeholder",
+} as const;
+
+/** A hub (list page) is indexable only with at least this many published courses. Our own rule; tune after the pilot. */
+export const HUB_MIN_COURSES = 3;
+
 export const showGate = process.env.NEXT_PUBLIC_SHOW_GATE === "1";
 
 export const BRAND = { name: "Teemeup", purple: "#4817CE", tagline: "Book your next round with Bob, the AI that finds your tee time." } as const;

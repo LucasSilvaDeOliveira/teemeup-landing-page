@@ -39,15 +39,19 @@ npm run build && npm start
 - The two example courses (Highland Creek and The Tradition, about 2 miles apart) take their photo from the CourseRev CDN. `next.config.ts` allows that host. Licensing of club photos for Teemeup is not confirmed.
 - Example data sources: coordinates come from the "Get Directions" link of the v2 booking page; The Tradition's facts come from the Chronogolf listing (reworded).
 
-## Ask Bob prompts and scorecard
+## Ask Bob prompts
 - "Try asking Bob" (`askBobPrompts()` in `lib/derive.ts`): up to six questions, worded relative to when the golfer clicks ("tomorrow", "this weekend"), so a cached page never offers a past date. Availability questions appear only when the window has matching times; the weather question needs coordinates; the cancellation question needs a cancellation policy. Confirm with the app team that Bob answers weather questions.
-- Tees and scorecard (`facts.scorecard`): tee yards, Course Rating and Slope Rating by gender, and par, stroke index and yards per hole. `checkScorecard()` runs before rendering: a tee column is shown only if its holes add up to the tee total, par only if the holes add up to the course par, stroke index only if it is complete with no repeats. Anything that fails is dropped (never corrected) and listed in the gate banner.
-- The example scorecards come from OpenGolfAPI (OpenStreetMap data, ODbL licence: credit line required). That source is NOT recommended yet: The Tradition's hole yards do not add up to its tee totals, and Highland Creek's Blue rating and slope differ from TeeOff's. The real source is to be decided.
+
+## Hub pages
+- `/courses` (all states) and `/courses/{country}/{region}` (one state, courses grouped by city) are the pages the breadcrumb links to. One template (`components/HubPage.tsx`), same look as the course page, no client JavaScript.
+- Content is computed from the course data: H1 "Book {state} tee times with Bob", a lead with the number of courses and cities, example questions for Bob about the main city, and one card per course (photo, city, holes, par, architect, open tee times on the first day with times and the lowest price). The same card is used for "Golf courses near ..." on the course page, which also links to its state hub.
+- Only courses that pass the publication gate are listed. A hub is `noindex, follow` until it lists at least `HUB_MIN_COURSES` published courses (our rule, 3 for now); then it gets a canonical and enters the sitemap. A state with no published course returns 404.
+- JSON-LD: `BreadcrumbList` and an `ItemList` of the course pages. State names come from `lib/regions.ts` (US only for now).
 
 ## Known gaps and decisions still open
 - Coordinates, opening year, photos and FAQ for the example course were not found in public pages; they are `null` or empty on purpose.
 - Store badges are plain text buttons. Apple and Google require their official badge artwork.
-- `/courses` and `/courses/{country}/{region}` are `noindex` list pages (hub). Turn on indexing only when there are enough courses with real content.
+- Hub indexing threshold (`HUB_MIN_COURSES`, now 3) and the placeholder brand links in `APP` (`lib/config.ts`) are to be confirmed.
 - URL structure: `/courses/{country}/{region}/{slug}`. Same-name courses in one state need the city added to the slug (rule to confirm with Chris).
 - Which domain hosts the pages (teemeup.ai or another) and the canonical rule for clubs that also have a CourseRev page.
 - Hosting: the app team runs Next.js on GCP. Nothing here depends on Vercel-only features; `next build && next start` works anywhere Node runs.
