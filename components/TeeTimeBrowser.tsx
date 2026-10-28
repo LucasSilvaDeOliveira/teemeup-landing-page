@@ -13,7 +13,8 @@ const PERIODS: { id: Period; label: string; test: (t: string) => boolean }[] = [
   { id: "afternoon", label: "Afternoon", test: (t) => t >= "15:00" },
 ];
 const PLAYERS = [0, 1, 2, 3, 4]; // 0 = any
-const FIRST_VIEW = 8;
+/** Times in the first view: 12 fills whole rows at 2, 3, 4 and 6 columns. */
+const FIRST_VIEW = 12;
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -97,9 +98,10 @@ export function TeeTimeBrowser({ name, days, tz, picker }: { name: string; days:
             const rank = isActive ? visible.indexOf(s) : -1;
             return (
               <li key={s.time} hidden={!ok} data-extra={isActive && ok && rank >= FIRST_VIEW ? "" : undefined}>
-                <a className="time" href={s.href}>
+                <a className="time" href={s.href} aria-label={`${s.label}, ${s.price} per player, ${s.spots} open. Book with Bob`}>
                   <b>{s.label}</b>
-                  <span>{s.price} · {s.spots} open</span>
+                  <span className="price">{s.price}</span>
+                  <span className="spots">{s.spots} open</span>
                 </a>
               </li>
             );
@@ -121,15 +123,27 @@ export function TeeTimeBrowser({ name, days, tz, picker }: { name: string; days:
     <div className="tt">
       <p className="tt-hint">Tap a time to book it with Bob. Prices are per player.</p>
       <div className="tt-filters" role="group" aria-label="Filter tee times">
-        <div className="chips" role="tablist" aria-label="Day">
-          <span className="rowlabel" aria-hidden="true">Day</span>
-          {days.map((d, i) => (
-            <button key={d.date} type="button" role="tab" id={`${uid}-d${i}`} aria-selected={!picked && i === dayIdx} className="chip" onClick={() => { setPicked(null); setDayIdx(i); setExpanded(false); }}>
-              {d.tab}
-            </button>
-          ))}
-          <button type="button" className="chip datechip" aria-selected={Boolean(picked)} role="tab" onClick={openPicker}>
-            {picked ? shortDate(picked.date) : "Other date"}
+        <p className="flabel" aria-hidden="true">Day</p>
+        <div className="daystrip" role="tablist" aria-label="Day">
+          {days.map((d, i) => {
+            const [wd, md] = d.tab.split(", ");
+            return (
+              <button key={d.date} type="button" role="tab" id={`${uid}-d${i}`} aria-selected={!picked && i === dayIdx} className="daycard" onClick={() => { setPicked(null); setDayIdx(i); setExpanded(false); }}>
+                <span className="dw">{wd}</span>
+                <b className="dd">{md}</b>
+                <span className="dn">{d.slots.length} times</span>
+              </button>
+            );
+          })}
+          <button type="button" role="tab" aria-selected={Boolean(picked)} aria-label={picked ? `Chosen date ${shortDate(picked.date)}. Choose another date` : "Choose another date"} className="daycard datecard" onClick={openPicker}>
+            <span className="dw">{picked ? shortDate(picked.date).split(", ")[0] : "More"}</span>
+            <b className="dd">
+              {!picked && (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M16 3v4M8 3v4M3 10h18" /></svg>
+              )}
+              {picked ? shortDate(picked.date).split(", ")[1] : "Dates"}
+            </b>
+            <span className="dn">{picked?.status === "ready" && picked.view ? `${picked.view.slots.length} times` : picked ? " " : "Calendar"}</span>
           </button>
           <input
             ref={dateRef}
@@ -142,24 +156,31 @@ export function TeeTimeBrowser({ name, days, tz, picker }: { name: string; days:
             onChange={(e) => pickDate(e.target.value)}
           />
         </div>
-        <div className="chips" role="group" aria-label="Time of day">
-          <span className="rowlabel" aria-hidden="true">Time</span>
-          {PERIODS.map((p) => {
-            const n = countFor(p.id);
-            return (
-              <button key={p.id} type="button" aria-pressed={period === p.id} disabled={n === 0 && period !== p.id} className="chip" onClick={() => { setPeriod(p.id); setExpanded(false); }}>
-                {p.label}{p.id !== "any" ? ` (${n})` : ""}
-              </button>
-            );
-          })}
-        </div>
-        <div className="chips" role="group" aria-label="Players">
-          <span className="rowlabel" aria-hidden="true">Players</span>
-          {PLAYERS.map((n) => (
-            <button key={n} type="button" aria-pressed={players === n} aria-label={n === 0 ? "Any number of players" : `${n} player${n === 1 ? "" : "s"}`} className="chip" onClick={() => { setPlayers(n); setExpanded(false); }}>
-              {n === 0 ? "Any" : n}
-            </button>
-          ))}
+        <div className="frow">
+          <div>
+            <p className="flabel" aria-hidden="true">Time of day</p>
+            <div className="seg seg-4" role="group" aria-label="Time of day">
+              {PERIODS.map((p) => {
+                const n = countFor(p.id);
+                return (
+                  <button key={p.id} type="button" aria-pressed={period === p.id} disabled={n === 0 && period !== p.id} onClick={() => { setPeriod(p.id); setExpanded(false); }}>
+                    <b>{p.id === "any" ? "Any" : p.label}</b>
+                    <small>{n}</small>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+          <div>
+            <p className="flabel" aria-hidden="true">Players</p>
+            <div className="seg seg-5" role="group" aria-label="Players">
+              {PLAYERS.map((n) => (
+                <button key={n} type="button" aria-pressed={players === n} aria-label={n === 0 ? "Any number of players" : `${n} player${n === 1 ? "" : "s"}`} onClick={() => { setPlayers(n); setExpanded(false); }}>
+                  <b>{n === 0 ? "Any" : n}</b>
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
