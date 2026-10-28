@@ -4,10 +4,10 @@ import { contourPaths } from "@/lib/contours";
 import type { CardData } from "@/lib/hub";
 import { jsonLdString } from "@/lib/seo";
 
-export type HubGroup = { id: string; heading: string; intro?: string; more?: { href: string; label: string }; cards: CardData[] };
+import type { ReactNode } from "react";
 
-/** Navigation block under the hero: state tiles on the all-courses hub, city chips on a state hub. */
-export type HubBrowse = { heading: string; style: "tiles" | "chips"; items: { href: string; name: string; meta: string }[] };
+/** A group of course cards. `cityId` lets the location filter show one city at a time. */
+export type HubGroup = { id: string; heading?: string; cityId?: string; cards: CardData[] };
 
 type Props = {
   /** Breadcrumb trail; the last item is the current page and is not linked. */
@@ -17,8 +17,8 @@ type Props = {
   lead: string;
   cta: { label: string; href: string };
   prompts: { q: string; href: string }[];
-  browse?: HubBrowse;
-  groups: HubGroup[];
+  /** The course list: one heading, the location filter, then the groups. */
+  list: { heading: string; filter: ReactNode; groups: HubGroup[] };
   /** Links to sibling hubs (other states), so every hub links across the whole directory. */
   others?: { heading: string; links: { href: string; name: string }[] };
   jsonLd: object;
@@ -26,8 +26,8 @@ type Props = {
   gate?: string | null;
 };
 
-/** Shared layout of the hub pages (all courses, one state). Same look as the course page, no client JavaScript. */
-export function HubPage({ crumbs, eyebrow, h1, lead, cta, prompts, browse, groups, others, jsonLd, seed, gate }: Props) {
+/** Shared layout of the hub pages (all courses, one state). Same look as the course page; the only client JavaScript is the location filter. */
+export function HubPage({ crumbs, eyebrow, h1, lead, cta, prompts, list, others, jsonLd, seed, gate }: Props) {
   const rings = contourPaths(seed);
   return (
     <>
@@ -57,7 +57,7 @@ export function HubPage({ crumbs, eyebrow, h1, lead, cta, prompts, browse, group
               <p className="lead">{lead}</p>
               <div className="cta-row">
                 <a className="btn primary" href={cta.href}>{cta.label}</a>
-                <a className="btn ghost" href={`#${browse ? "browse" : (groups[0]?.id ?? "courses")}`}>{browse?.style === "tiles" ? "Browse by state" : "See courses"}</a>
+                <a className="btn ghost" href="#courses">See courses</a>
               </div>
               {prompts.length > 0 && (
                 <div className="prompts hub-prompts">
@@ -66,34 +66,18 @@ export function HubPage({ crumbs, eyebrow, h1, lead, cta, prompts, browse, group
                 </div>
               )}
             </section>
-            {browse && (
-              <section className="block" id="browse">
-                <h2>{browse.heading}</h2>
-                {browse.style === "tiles" ? (
-                  <ul className="tiles">
-                    {browse.items.map((x) => (
-                      <li key={x.href}><a className="tile" href={x.href}><b>{x.name}</b><span>{x.meta}</span></a></li>
-                    ))}
+            <section className="block" id="courses">
+              <h2>{list.heading}</h2>
+              {list.filter}
+              {list.groups.map((g) => (
+                <div className="cardgroup" key={g.id} id={g.id} data-city-group={g.cityId}>
+                  {g.heading && <h3>{g.heading}</h3>}
+                  <ul className="nearby">
+                    {g.cards.map((card) => <li key={card.href}><CourseCard card={card} /></li>)}
                   </ul>
-                ) : (
-                  <ul className="citychips">
-                    {browse.items.map((x) => (
-                      <li key={x.href}><a className="citychip" href={x.href}>{x.name} <span>{x.meta}</span></a></li>
-                    ))}
-                  </ul>
-                )}
-              </section>
-            )}
-            {groups.map((g) => (
-              <section className="block" id={g.id} key={g.id}>
-                <h2>{g.heading}</h2>
-                {g.intro && <p className="sub">{g.intro}</p>}
-                <ul className="nearby">
-                  {g.cards.map((card) => <li key={card.href}><CourseCard card={card} /></li>)}
-                </ul>
-                {g.more && <p className="asof"><a href={g.more.href}>{g.more.label}</a></p>}
-              </section>
-            ))}
+                </div>
+              ))}
+            </section>
             {others && others.links.length > 0 && (
               <section className="block">
                 <h2>{others.heading}</h2>

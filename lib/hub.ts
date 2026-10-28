@@ -104,3 +104,17 @@ export async function listRegions() {
 }
 
 export const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
+
+/** Data for the location filter: countries, their states and cities, with live counts of published courses. */
+export async function locationTree() {
+  const regions = await listRegions();
+  const countries = [...new Set(regions.map((r) => r.country))];
+  return countries.map((code) => ({
+    code,
+    name: code === "us" ? "United States" : code.toUpperCase(),
+    states: regions
+      .filter((r) => r.country === code)
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map((r) => ({ code: r.region, name: r.name, path: r.path, count: r.courses.length, cities: r.cities.map((g) => ({ id: slugify(g.key), name: g.key, count: g.courses.length })).sort((a, b) => a.name.localeCompare(b.name)) })),
+  }));
+}

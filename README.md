@@ -43,9 +43,10 @@ npm run build && npm start
 - "Try asking Bob" (`askBobPrompts()` in `lib/derive.ts`): up to six questions, worded relative to when the golfer clicks ("tomorrow", "this weekend"), so a cached page never offers a past date. Availability questions appear only when the window has matching times; the weather question needs coordinates; the cancellation question needs a cancellation policy. Confirm with the app team that Bob answers weather questions.
 
 ## Hub pages
-- `/courses` (all states) and `/courses/{country}/{region}` (one state) are the directory the breadcrumb links to. One template (`components/HubPage.tsx`), same look as the course page, no client JavaScript. Nothing on a hub is about one particular city.
-- `/courses`: H1 "Book golf tee times with Bob", counts of courses and states, questions for Bob worded "near me", state tiles (courses and cities per state), then up to 9 course cards ordered by the first day with open times.
-- `/courses/{country}/{region}`: H1 "Book {state} tee times with Bob", questions for Bob about the state, city links (only when the state has more than one city), every course grouped by city, and links to the other states.
+- `/courses` (all states) and `/courses/{country}/{region}` (one state) are the directory the breadcrumb links to. One template (`components/HubPage.tsx`), same look as the course page. The copy is the same on every hub except the state name; there are no hand-written counts or city names.
+- Location filter (`components/LocationFilter.tsx`): country, state and city selects. Options and counts are computed from the published courses. Country and state are pages: choosing one opens its hub. City filters the state hub in place (other city groups are hidden; the choice is kept in the URL hash, so no new URLs exist). This is the only client JavaScript on a hub.
+- `/courses`: questions for Bob worded "near me", the filter, up to 9 course cards ordered by the first day with open times, and plain links to every state (for crawlers and people without JavaScript).
+- `/courses/{country}/{region}`: questions for Bob about the state, the filter, every course grouped by city, and plain links to the other states.
 - Course card (`components/CourseCard.tsx`, also used for "Golf courses near ..."): photo, city, holes, par, architect, open tee times on the first day with times and the lowest price.
 - Only courses that pass the publication gate are listed. A hub is `noindex, follow` until it lists at least `HUB_MIN_COURSES` published courses (our rule, 3 for now); then it gets a canonical and enters the sitemap. A state with no published course returns 404.
 - JSON-LD: `BreadcrumbList` and an `ItemList` of the course pages. State names come from `lib/regions.ts` (US only for now).
