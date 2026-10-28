@@ -1,5 +1,6 @@
 import type { CourseData } from "./course-data";
-import { cottonwood, highlandCreek, theDivide, tradition, waterford } from "./fixtures";
+import type { TeeTimeDay } from "./course-data";
+import { cottonwood, fixtureDay, highlandCreek, theDivide, tradition, waterford } from "./fixtures";
 
 /**
  * DATA LAYER STUB. The dev team replaces these two functions with the real source.
@@ -20,4 +21,12 @@ export async function listCourses(): Promise<CourseData[]> {
 export async function getNearby(c: CourseData): Promise<CourseData[]> {
   const all = await listCourses();
   return c.teemeup.nearby.map((slug) => all.find((x) => x.facts.slug === slug)).filter((x): x is CourseData => Boolean(x));
+}
+
+/**
+ * Tee times of one course on one day (local date at the course), for the date picker. Replace with the real feed.
+ * Return a day with an empty `slots` list when nothing is bookable, and null when the day is not known.
+ */
+export async function getTeeTimes(c: CourseData, date: string): Promise<TeeTimeDay | null> {
+  return fixtureDay(c.facts.slug, date);
 }

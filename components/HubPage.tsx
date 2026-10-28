@@ -60,7 +60,7 @@ export function HubPage({ crumbs, eyebrow, h1, lead, cta, prompts, list, jsonLd,
               {prompts.length > 0 && (
                 <div className="prompts hub-prompts">
                   <p className="label">Try asking Bob</p>
-                  {prompts.map((p) => <a key={p.q} className="prompt" href={p.href}>“{p.q}”</a>)}
+                  {prompts.map((p, i) => <a key={p.q} className="prompt" data-desktop-only={i >= 3 ? "" : undefined} href={p.href}>“{p.q}”</a>)}
                 </div>
               )}
             </section>

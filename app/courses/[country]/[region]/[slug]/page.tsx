@@ -4,12 +4,13 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CourseCard } from "@/components/CourseCard";
 import { Qr } from "@/components/Qr";
-import { TeeTimeBrowser, type DayView } from "@/components/TeeTimeBrowser";
+import { TeeTimeBrowser } from "@/components/TeeTimeBrowser";
+import { addDays, todayAt, toDayView, tzLabel, type DayView } from "@/lib/day-view";
 import { BRAND, absoluteUrl, coursePath, indexingAllowed, showGate } from "@/lib/config";
 import { indexabilityProblems } from "@/lib/course-data";
 import { contourPaths } from "@/lib/contours";
 import { getCourse, getNearby, listCourses } from "@/lib/courses";
-import { askBobPrompts, chatLink, daySentence, formatPhone, formatTime, longDate, metaDescription, milesBetween, parseDate, metaTitle, money, openSlots, slotPrompt, summarizeDay } from "@/lib/derive";
+import { askBobPrompts, chatLink, formatPhone, metaDescription, milesBetween, metaTitle, openSlots } from "@/lib/derive";
 import { courseJsonLd, jsonLdString } from "@/lib/seo";
 import { courseCard } from "@/lib/hub";
 import { regionName, regionPath } from "@/lib/regions";
@@ -59,23 +60,14 @@ export default async function CoursePage({ params }: Props) {
   const p = c.ops.policies;
   const policyLines = [p.cancellation, p.dressCode, p.carts, p.walking, p.groupingNote].filter(Boolean) as string[];
   const rings = contourPaths(f.slug);
-  const dayViews: DayView[] = days.map((day) => {
-    const d = parseDate(day.date);
-    return {
-      date: day.date,
-      tab: `${d.weekday.slice(0, 3)}, ${d.month.slice(0, 3)} ${d.day}`,
-      heading: longDate(day.date),
-      sentence: daySentence(f.name, summarizeDay(day)),
-      asOf: day.asOf.replace("T", " ").replace(":00Z", " UTC"),
-      slots: openSlots(day).sort((a, b) => a.time.localeCompare(b.time)).map((slot) => ({
-        time: slot.time,
-        label: formatTime(slot.time),
-        price: slot.priceUsd !== null ? money(slot.priceUsd) : "Price on request",
-        spots: slot.spots,
-        href: chatLink(c, { q: slotPrompt(f.name, day.date, slot), date: day.date, time: slot.time }),
-      })),
-    };
-  });
+  const dayViews: DayView[] = days.map((day) => toDayView(c, day));
+  const firstDate = todayAt(f.timeZone);
+  const picker = {
+    api: `/api/tee-times?${new URLSearchParams({ country: f.country, region: f.region, slug: f.slug }).toString()}`,
+    min: firstDate,
+    max: addDays(firstDate, (p.bookingWindowDays ?? 14) - 1),
+    askHref: chatLink(c, { q: `Find me a tee time at ${f.name} on __DATE__` }).replace(encodeURIComponent("__DATE__"), "__DATE__"),
+  };
   const nearby = (await getNearby(c))
     .filter((n) => indexabilityProblems(n).length === 0)
     .map((n) => ({ n, miles: f.geo && n.facts.geo ? milesBetween(f.geo, n.facts.geo) : null }))
@@ -125,11 +117,15 @@ export default async function CoursePage({ params }: Props) {
                     <a className="btn primary" href={bobGeneral}>Ask Bob about {f.name}</a>
                     <a className="btn ghost" href="#times">See open tee times</a>
                   </div>
+                  <div className="stores stores-mobile" aria-label="Get the Teemeup app">
+                    <a className="store" href={c.teemeup.appStoreUrl} rel="noopener">App Store</a>
+                    <a className="store" href={c.teemeup.playStoreUrl} rel="noopener">Google Play</a>
+                  </div>
                   {prompts.length > 0 && (
                     <div className="prompts">
                       <p className="label">Try asking Bob</p>
-                      {prompts.map((q) => (
-                        <a key={q} className="prompt" href={chatLink(c, { q })}>“{q}”</a>
+                      {prompts.map((q, i) => (
+                        <a key={q} className="prompt" data-desktop-only={i >= 3 ? "" : undefined} href={chatLink(c, { q })}>“{q}”</a>
                       ))}
                     </div>
                   )}
@@ -152,7 +148,7 @@ export default async function CoursePage({ params }: Props) {
             {dayViews.length > 0 && (
               <section className="block" id="times">
                 <h2>Open tee times at {f.name}</h2>
-                <TeeTimeBrowser name={f.name} days={dayViews} />
+                <TeeTimeBrowser name={f.name} days={dayViews} tz={tzLabel(f.timeZone)} picker={picker} />
               </section>
             )}
 

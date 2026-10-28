@@ -84,7 +84,7 @@ export function courseMarkdown(c: CourseData): string {
     const s = summarizeDay(day);
     if (s.count === 0) continue;
     lines.push(`## Open tee times: ${longDate(day.date)}`, "", `Data as of ${day.asOf}. Availability and prices change.`, "");
-    lines.push("| Time | Price | Open spots | Book |", "|---|---|---|---|");
+    lines.push("| Time | Price per player | Open spots | Book |", "|---|---|---|---|");
     for (const slot of openSlots(day)) {
       const link = chatLink(c, { q: `Book a tee time at ${f.name} on ${longDate(day.date)} at ${formatTime(slot.time)}`, date: day.date, time: slot.time });
       lines.push(`| ${formatTime(slot.time)} | ${slot.priceUsd !== null ? `$${slot.priceUsd.toFixed(2)}` : "n/a"} | ${slot.spots} | [Book](${link}) |`);

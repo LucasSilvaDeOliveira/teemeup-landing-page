@@ -23,6 +23,8 @@ export type CourseFacts = {
   /** The club's own site. Goes in JSON-LD `sameAs`; not necessarily a visible link. */
   website: string | null;
   geo: { lat: number; lng: number } | null;
+  /** IANA time zone of the course, e.g. "America/New_York". Tee times are local to it; the page says so. */
+  timeZone: string;
   holes: number;
   par: number | null;
   designer: string | null;
@@ -62,7 +64,10 @@ export type TeeTimeDay = {
 };
 
 export type CourseOps = {
-  /** Next N days, finite window. Rendered in the server HTML. No indexable URL per day. */
+  /**
+   * The first few days with times (3 in the example), rendered in the server HTML. No indexable URL per day.
+   * Any other day inside the booking window is loaded on demand through `getTeeTimes()` (lib/courses.ts) by the date picker.
+   */
   teeTimes: TeeTimeDay[];
   policies: {
     cancellation?: string;
@@ -71,6 +76,7 @@ export type CourseOps = {
     walking?: string;
     groupingNote?: string;
     maxPlayers?: number;
+    /** How many days ahead tee times open. Also the last day the date picker offers (default 14). */
     bookingWindowDays?: number;
   };
   /** Only for fixed price lists. Always with the date it was published. Tee-time prices win when both exist. */

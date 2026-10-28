@@ -8,19 +8,24 @@ import { SNAPSHOT_AS_OF, TEE_TIMES } from "./fixture-tee-times";
  * Tee times: `fixture-tee-times.ts` (CourseRev v2 booking API, read 28 Oct 2026 for 29-31 Oct).
  */
 
+/** One day from the snapshot, or null if the snapshot does not cover it. */
+export function fixtureDay(slug: string, date: string): TeeTimeDay | null {
+  const rows = TEE_TIMES[slug]?.[date];
+  if (!rows) return null;
+  return { date, asOf: SNAPSHOT_AS_OF, slots: rows.map(([time, priceUsd, spots]) => ({ time, priceUsd, spots, holes: 18 as const, cart: null })) };
+}
+
+/** Days rendered in the server HTML: the first 3 days of the snapshot. The date picker loads the others. */
+const SSR_DAYS = 3;
 const days = (slug: string): TeeTimeDay[] =>
-  Object.entries(TEE_TIMES[slug] ?? {}).map(([date, rows]) => ({
-    date,
-    asOf: SNAPSHOT_AS_OF,
-    slots: rows.map(([time, priceUsd, spots]) => ({ time, priceUsd, spots, holes: 18 as const, cart: null })),
-  }));
+  Object.keys(TEE_TIMES[slug] ?? {}).sort().slice(0, SSR_DAYS).map((d) => fixtureDay(slug, d)!);
 
 /** Teemeup layer with placeholders; only the slug and the nearby list change per course. */
 const teemeup = (slug: string, nearby: string[]): TeemeupLayer => ({
   deepLinkUrl: `https://example.invalid/open?course=${slug}`, // PLACEHOLDER
   qrImageUrl: null,
-  appStoreUrl: "https://apps.apple.com/app/id0000000000", // PLACEHOLDER
-  playStoreUrl: "https://play.google.com/store/apps/details?id=example.placeholder", // PLACEHOLDER
+  appStoreUrl: "https://apps.apple.com/us/app/teemeup-golf-tee-times/id6763700956", // from teemeup.ai, 28 Oct 2026
+  playStoreUrl: "https://play.google.com/store/apps/details?id=com.teemeupai", // from teemeup.ai, 28 Oct 2026
   chatBaseUrl: "https://web.teemeup.example", // PLACEHOLDER: confirm the real web chat URL with the app team
   nearby,
 });
@@ -39,6 +44,7 @@ export const highlandCreek: CourseData = {
     phone: "+17048759000",
     website: "https://highlandcreekgolfclub.com",
     geo: { lat: 35.3808938, lng: -80.7629295 },
+    timeZone: "America/New_York",
     holes: 18,
     par: 72,
     designer: "Clifton, Ezell and Clifton",
@@ -86,6 +92,7 @@ export const tradition: CourseData = {
     phone: "+17045037529",
     website: "https://thetraditiongolfclub.com",
     geo: { lat: 35.3508232, lng: -80.7743232 },
+    timeZone: "America/New_York",
     holes: 18,
     par: 72,
     designer: "John Cassell II",
@@ -129,6 +136,7 @@ export const theDivide: CourseData = {
     phone: "+17046286438",
     website: "https://thedividegolfclub.com",
     geo: { lat: 35.1290016, lng: -80.6340228 },
+    timeZone: "America/New_York",
     holes: 18,
     par: null, // TODO: not confirmed on the pages read
     designer: "John Cassell II",
@@ -176,6 +184,7 @@ export const waterford: CourseData = {
     phone: "+18033240300",
     website: "https://thelinksatwaterford.com",
     geo: { lat: 34.9493873, lng: -80.9450954 },
+    timeZone: "America/New_York",
     holes: 18,
     par: 72,
     designer: "Hale Irwin",
@@ -194,7 +203,8 @@ export const waterford: CourseData = {
       walking: "Walking is allowed any time Monday to Friday, and from 1:00 PM on weekends and holidays.",
       dressCode: "Proper golf attire is required. Outside food, coolers and alcohol are not allowed.",
       maxPlayers: 4,
-      bookingWindowDays: 14,
+      // The demo FAQ says 14 days, but on 28 Oct the v2 API had times only up to 7 Nov (10 days). Confirm with the club.
+      bookingWindowDays: 10,
     },
     faq: [],
   },
@@ -222,6 +232,7 @@ export const cottonwood: CourseData = {
     phone: "+16194429891",
     website: "https://cottonwoodgolf.com",
     geo: { lat: 32.7479326, lng: -116.9106278 },
+    timeZone: "America/Los_Angeles",
     holes: 18,
     par: 72,
     designer: null, // TODO: the v2 text names an architect, not verified
@@ -240,7 +251,8 @@ export const cottonwood: CourseData = {
       walking: "Walking is allowed at all times; carts can be rented.",
       dressCode: "Collared shirts or golf mock necks and tailored pants or shorts are required. No denim, gym wear or metal spikes.",
       maxPlayers: 4,
-      bookingWindowDays: 14,
+      // The demo FAQ says 14 days, but on 28 Oct the v2 API had times only up to 4 Nov (7 days). Confirm with the club.
+      bookingWindowDays: 7,
     },
     faq: [],
   },

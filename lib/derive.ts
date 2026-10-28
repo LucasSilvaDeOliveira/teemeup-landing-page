@@ -70,8 +70,8 @@ export function daySentence(name: string, s: DaySummary) {
   const range =
     s.minPrice !== null && s.maxPrice !== null
       ? s.minPrice === s.maxPrice
-        ? `, at ${moneyShort(s.minPrice)}`
-        : `, from ${moneyShort(s.minPrice)} to ${moneyShort(s.maxPrice)}`
+        ? `, at ${moneyShort(s.minPrice)} per player`
+        : `, from ${moneyShort(s.minPrice)} to ${moneyShort(s.maxPrice)} per player`
       : "";
   const first = s.first ? ` The first is at ${formatTime(s.first.time)}.` : "";
   return `On ${longDate(s.date)}, ${s.count} tee time${s.count === 1 ? " is" : "s are"} open at ${name}${range}.${first}`;
@@ -100,9 +100,10 @@ export function askBobPrompts(c: CourseData): string[] {
   const name = c.facts.name;
   const days = c.ops.teeTimes.map(summarizeDay).filter((s) => s.count > 0);
   const any = (k: "hasMorning" | "hasFour" | "hasTwilight") => days.some((s) => s[k]);
+  // Order matters: phones show only the first three (the broadest questions).
   const out: string[] = [`What tee times are open at ${name} tomorrow?`];
-  if (any("hasMorning")) out.push(any("hasFour") ? `Find a morning tee time for 4 players at ${name}` : `Find a morning tee time at ${name}`);
   if (days.some((s) => s.minPrice !== null)) out.push(`What is the cheapest tee time at ${name} this week?`);
+  if (any("hasMorning")) out.push(any("hasFour") ? `Find a morning tee time for 4 players at ${name}` : `Find a morning tee time at ${name}`);
   if (any("hasTwilight")) out.push(`Is there an afternoon tee time at ${name} this weekend?`);
   if (c.facts.geo) out.push(`What will the weather be at ${name} tomorrow?`);
   if (c.ops.policies.cancellation) out.push(`What is the cancellation policy at ${name}?`);
@@ -119,7 +120,7 @@ export function metaDescription(c: CourseData) {
   const base = `Book tee times at ${f.name} in ${f.city}, ${f.region.toUpperCase()} with Bob, the AI that finds your tee time.`;
   if (!day) return base;
   const s = summarizeDay(day);
-  const price = s.minPrice !== null ? ` Open times from ${moneyShort(s.minPrice)}.` : "";
+  const price = s.minPrice !== null ? ` Open times from ${moneyShort(s.minPrice)} per player.` : "";
   return `${base}${price}`.slice(0, 160);
 }
 
