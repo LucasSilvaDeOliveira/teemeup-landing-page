@@ -47,7 +47,7 @@ npm run build && npm start
 - Location filter (`components/LocationFilter.tsx`): country, state and city selects. Options and counts are computed from the published courses. Country and state are pages: choosing one opens its hub. City filters the state hub in place (other city groups are hidden; the choice is kept in the URL hash, so no new URLs exist). This is the only client JavaScript on a hub.
 - `/courses`: questions for Bob worded "near me", the filter, up to 9 course cards ordered by the first day with open times, and plain links to every state (for crawlers and people without JavaScript).
 - `/courses/{country}/{region}`: questions for Bob about the state, the filter, every course grouped by city, and plain links to the other states.
-- Course card (`components/CourseCard.tsx`, also used for "Golf courses near ..."): photo, city, holes, par, architect, open tee times on the first day with times and the lowest price.
+- Course card (`components/CourseCard.tsx`, also used for "Golf courses near ..."): photo, name, and city and state (plus the distance on the course page). Nothing else, so the card stays the same for every course.
 - Only courses that pass the publication gate are listed. A hub is `noindex, follow` until it lists at least `HUB_MIN_COURSES` published courses (our rule, 3 for now); then it gets a canonical and enters the sitemap. A state with no published course returns 404.
 - JSON-LD: `BreadcrumbList` and an `ItemList` of the course pages. State names come from `lib/regions.ts` (US only for now).
 

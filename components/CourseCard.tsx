@@ -1,7 +1,7 @@
 import Image from "next/image";
 import type { CardData } from "@/lib/hub";
 
-/** Course card used by the hubs and by "Golf courses near ...". A plain link: name, place, facts and availability. */
+/** Course card used by the hubs and by "Golf courses near ...". A plain link: photo, name and place (with the distance when known). */
 export function CourseCard({ card }: { card: CardData }) {
   return (
     <a className="ncard" href={card.href}>
@@ -13,8 +13,6 @@ export function CourseCard({ card }: { card: CardData }) {
       <span className="nbody">
         <b>{card.name}</b>
         <span>{card.place}</span>
-        {card.detail && <span>{card.detail}</span>}
-        {card.availability && <span className="avail">{card.availability}</span>}
       </span>
     </a>
   );

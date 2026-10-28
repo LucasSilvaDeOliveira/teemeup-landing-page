@@ -1,7 +1,7 @@
 import { APP, HUB_MIN_COURSES, coursePath, indexingAllowed } from "./config";
 import { indexabilityProblems, type CourseData } from "./course-data";
 import { listCourses } from "./courses";
-import { longDate, moneyShort, openSlots, summarizeDay } from "./derive";
+import { openSlots, summarizeDay } from "./derive";
 import { regionName, regionPath } from "./regions";
 
 /**
@@ -13,8 +13,6 @@ export type CardData = {
   href: string;
   name: string;
   place: string;
-  detail: string | null;
-  availability: string | null;
   photo: CourseData["facts"]["photos"][number] | null;
 };
 
@@ -22,18 +20,11 @@ export async function publishedCourses(): Promise<CourseData[]> {
   return (await listCourses()).filter((c) => indexabilityProblems(c).length === 0);
 }
 
-/** Card for one course: first day with open times, its count and lowest price. */
+/** Card for one course: name and place, plus the distance when the page knows where the golfer is looking from. */
 export function courseCard(c: CourseData, distanceMiles: number | null = null): CardData {
   const f = c.facts;
-  const day = c.ops.teeTimes.find((d) => openSlots(d).length > 0);
-  let availability: string | null = null;
-  if (day) {
-    const s = summarizeDay(day);
-    availability = `${s.count} open tee time${s.count === 1 ? "" : "s"} on ${longDate(day.date)}${s.minPrice !== null ? `, from ${moneyShort(s.minPrice)}` : ""}`;
-  }
-  const detail = [`${f.holes} holes`, f.par ? `par ${f.par}` : null, f.designer ? `designed by ${f.designer}` : null].filter(Boolean).join(" · ");
   const dist = distanceMiles !== null ? ` · ${distanceMiles < 10 ? distanceMiles.toFixed(1) : Math.round(distanceMiles)} miles away` : "";
-  return { href: coursePath(f), name: f.name, place: `${f.city}, ${f.region.toUpperCase()}${dist}`, detail: detail || null, availability, photo: f.photos[0] ?? null };
+  return { href: coursePath(f), name: f.name, place: `${f.city}, ${f.region.toUpperCase()}${dist}`, photo: f.photos[0] ?? null };
 }
 
 /** Groups keep the data order of first appearance; courses inside a group are sorted by name. */
