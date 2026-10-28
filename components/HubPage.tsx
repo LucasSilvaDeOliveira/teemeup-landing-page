@@ -19,15 +19,13 @@ type Props = {
   prompts: { q: string; href: string }[];
   /** The course list: one heading, the location filter, then the groups. */
   list: { heading: string; filter: ReactNode; groups: HubGroup[] };
-  /** Links to sibling hubs (other states), so every hub links across the whole directory. */
-  others?: { heading: string; links: { href: string; name: string }[] };
   jsonLd: object;
   seed: string;
   gate?: string | null;
 };
 
 /** Shared layout of the hub pages (all courses, one state). Same look as the course page; the only client JavaScript is the location filter. */
-export function HubPage({ crumbs, eyebrow, h1, lead, cta, prompts, list, others, jsonLd, seed, gate }: Props) {
+export function HubPage({ crumbs, eyebrow, h1, lead, cta, prompts, list, jsonLd, seed, gate }: Props) {
   const rings = contourPaths(seed);
   return (
     <>
@@ -78,14 +76,6 @@ export function HubPage({ crumbs, eyebrow, h1, lead, cta, prompts, list, others,
                 </div>
               ))}
             </section>
-            {others && others.links.length > 0 && (
-              <section className="block">
-                <h2>{others.heading}</h2>
-                <ul className="citychips">
-                  {others.links.map((l) => <li key={l.href}><a className="citychip" href={l.href}>{l.name}</a></li>)}
-                </ul>
-              </section>
-            )}
           </main>
           <footer className="foot">
             <p className="disclaimer">Tee times and prices change. Bob checks live availability when you ask.</p>

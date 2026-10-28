@@ -17,7 +17,7 @@ export async function generateStaticParams() {
 async function load(country: string, region: string) {
   const all = await listRegions();
   const r = all.find((x) => x.country === country && x.region === region) ?? null;
-  return r ? { r, others: all.filter((x) => x !== r).sort((a, b) => a.name.localeCompare(b.name)) } : null;
+  return r ? { r } : null;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -33,12 +33,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-/** State hub: location filter, every published course grouped by city, links to the other states. */
+/** State hub: location filter and every published course grouped by city. */
 export default async function RegionHub({ params }: Props) {
   const { country, region } = await params;
   const hit = await load(country, region);
   if (!hit) notFound();
-  const { r, others } = hit;
+  const { r } = hit;
   const cities = [...r.cities].sort((a, b) => a.key.localeCompare(b.key));
   return (
     <HubPage
@@ -60,7 +60,6 @@ export default async function RegionHub({ params }: Props) {
           cards: byAvailability(g.courses).map((c) => courseCard(c)),
         })),
       }}
-      others={{ heading: "Golf courses in other states", links: others.map((o) => ({ href: o.path, name: o.name })) }}
       jsonLd={hubJsonLd(
         [{ name: BRAND.name, path: "/" }, { name: "Courses", path: "/courses" }, { name: r.name, path: r.path }],
         r.courses.map((c) => ({ name: c.facts.name, path: coursePath(c.facts) })),

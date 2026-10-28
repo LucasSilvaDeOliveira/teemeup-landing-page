@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { HubPage } from "@/components/HubPage";
 import { LocationFilter } from "@/components/LocationFilter";
 import { BRAND, absoluteUrl, coursePath, showGate } from "@/lib/config";
-import { byAvailability, courseCard, hubChatLink, hubGateText, hubIndexable, hubPrompts, listRegions, locationTree, publishedCourses } from "@/lib/hub";
+import { byAvailability, courseCard, hubChatLink, hubGateText, hubIndexable, hubPrompts, locationTree, publishedCourses } from "@/lib/hub";
 import { hubJsonLd } from "@/lib/seo";
 
 export const revalidate = 300;
@@ -20,10 +20,9 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-/** All-courses hub: location filter (country / state / city), courses with open tee times, links to every state. */
+/** All-courses hub: location filter (country / state / city) and courses with open tee times. */
 export default async function CoursesHub() {
   const courses = await publishedCourses();
-  const regions = await listRegions();
   return (
     <HubPage
       seed="courses"
@@ -39,7 +38,6 @@ export default async function CoursesHub() {
         filter: <LocationFilter tree={await locationTree()} country="us" state={null} />,
         groups: [{ id: "open", heading: "Courses with open tee times", cards: byAvailability(courses).slice(0, FEATURED).map((c) => courseCard(c)) }],
       }}
-      others={{ heading: "Golf courses by state", links: [...regions].sort((a, b) => a.name.localeCompare(b.name)).map((r) => ({ href: r.path, name: r.name })) }}
       jsonLd={hubJsonLd(
         [{ name: BRAND.name, path: "/" }, { name: "Courses", path: "/courses" }],
         courses.map((c) => ({ name: c.facts.name, path: coursePath(c.facts) })),
