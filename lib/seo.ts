@@ -93,10 +93,11 @@ export function courseMarkdown(c: CourseData): string {
   }
   const p = c.ops.policies;
   const pol = [p.cancellation, p.dressCode, p.carts, p.walking, p.groupingNote].filter(Boolean) as string[];
-  if (pol.length || p.maxPlayers) {
+  if (pol.length || p.maxPlayers || p.bookingWindowDays) {
     lines.push("## Policies", "");
     for (const x of pol) lines.push(`- ${x}`);
     if (p.maxPlayers) lines.push(`- Up to ${p.maxPlayers} players per booking.`);
+    if (p.bookingWindowDays) lines.push(`- Tee times open ${p.bookingWindowDays} days ahead.`);
     lines.push("");
   }
   if (c.ops.faq.length) {

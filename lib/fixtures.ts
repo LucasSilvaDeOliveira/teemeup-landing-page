@@ -1,39 +1,32 @@
-import type { CourseData, TeeTimeSlot } from "./course-data";
+import type { CourseData, TeeTimeDay, TeemeupLayer } from "./course-data";
+import { SNAPSHOT_AS_OF, TEE_TIMES } from "./fixture-tee-times";
 
 /**
- * Example fixture: Highland Creek Golf Club (Charlotte, NC).
- * Facts: the club's website, read on 22 Oct 2026 (reworded in our own words).
- * Tee times: snapshot of the CourseRev v2 booking page on 27 Oct 2026 (bookable times of 27, 28 and 29 Oct).
- * It is a placeholder for the real feed, which the dev team defines.
- * Anything not found in public pages is left empty on purpose (TODO), never guessed.
+ * EXAMPLE DATA for five real CourseRev clubs (Highland Creek, The Tradition, The Divide, Waterford, Cottonwood).
+ * Placeholder for the real data layer, which the dev team defines. Sources are in each `provenance`.
+ * Facts are reworded in our own words; anything not found is left empty on purpose (TODO), never guessed.
+ * Tee times: `fixture-tee-times.ts` (CourseRev v2 booking API, read 28 Oct 2026 for 29-31 Oct).
  */
 
-// [time, price in USD, open spots]. Bookable times only (spots > 0).
-// Real snapshot of the CourseRev v2 booking page read on 27 Oct 2026 (today and the next two days). Placeholder for the real feed.
-const DAY_27: [string, number, number][] = [
-  ["13:40", 53.07, 4],
-];
-const DAY_28: [string, number, number][] = [
-  ["07:50", 48.85, 4], ["08:10", 48.85, 1], ["08:20", 48.85, 4], ["08:30", 48.85, 4], ["08:40", 48.85, 4],
-  ["08:50", 48.85, 4], ["09:10", 58.71, 4], ["09:20", 58.71, 4], ["09:30", 58.71, 2], ["09:40", 58.71, 4],
-  ["10:00", 58.71, 2], ["10:10", 58.71, 3], ["10:40", 58.71, 4], ["10:50", 58.71, 4], ["11:10", 50.26, 4],
-  ["11:20", 50.26, 4], ["11:30", 50.26, 4], ["11:40", 50.26, 4], ["11:50", 50.26, 4], ["12:00", 50.26, 2],
-  ["12:10", 50.26, 4], ["12:20", 50.26, 4], ["12:30", 50.26, 4], ["12:50", 50.26, 4], ["13:00", 50.26, 4],
-  ["13:10", 50.26, 4], ["13:20", 50.26, 4], ["13:30", 50.26, 4], ["13:40", 50.26, 4], ["13:50", 50.26, 4],
-  ["14:00", 50.26, 4], ["14:10", 50.26, 4], ["14:20", 50.26, 4], ["14:30", 50.26, 4], ["14:40", 50.26, 4],
-  ["14:50", 50.26, 4], ["15:00", 50.26, 4], ["15:10", 38.99, 4], ["15:20", 38.99, 4], ["15:30", 38.99, 2],
-  ["15:40", 38.99, 4], ["15:50", 38.99, 4],
-];
-const DAY_29: [string, number, number][] = [
-  ["08:10", 64.34, 1], ["11:00", 53.07, 4], ["11:10", 53.07, 4], ["11:20", 53.07, 4], ["11:40", 53.07, 4],
-  ["11:50", 53.07, 4], ["12:00", 53.07, 4], ["12:10", 53.07, 4], ["12:20", 53.07, 4], ["12:30", 53.07, 4],
-  ["12:40", 53.07, 2], ["12:50", 53.07, 4], ["13:00", 53.07, 4], ["13:10", 53.07, 4], ["13:20", 53.07, 4],
-  ["13:30", 53.07, 4], ["13:40", 53.07, 4], ["13:50", 53.07, 4], ["14:00", 53.07, 4], ["14:10", 53.07, 4],
-  ["14:20", 53.07, 4], ["14:30", 53.07, 4], ["14:40", 53.07, 4], ["14:50", 53.07, 4], ["15:00", 38.99, 4],
-  ["15:10", 38.99, 4], ["15:20", 38.99, 4], ["15:30", 38.99, 4], ["15:40", 38.99, 4], ["15:50", 38.99, 4],
-  ["16:00", 38.99, 4], ["16:10", 38.99, 4], ["16:20", 38.99, 4], ["16:30", 38.99, 4],
-];
-const toSlots = (rows: [string, number, number][]): TeeTimeSlot[] => rows.map(([time, priceUsd, spots]) => ({ time, priceUsd, spots, holes: 18, cart: null }));
+const days = (slug: string): TeeTimeDay[] =>
+  Object.entries(TEE_TIMES[slug] ?? {}).map(([date, rows]) => ({
+    date,
+    asOf: SNAPSHOT_AS_OF,
+    slots: rows.map(([time, priceUsd, spots]) => ({ time, priceUsd, spots, holes: 18 as const, cart: null })),
+  }));
+
+/** Teemeup layer with placeholders; only the slug and the nearby list change per course. */
+const teemeup = (slug: string, nearby: string[]): TeemeupLayer => ({
+  deepLinkUrl: `https://example.invalid/open?course=${slug}`, // PLACEHOLDER
+  qrImageUrl: null,
+  appStoreUrl: "https://apps.apple.com/app/id0000000000", // PLACEHOLDER
+  playStoreUrl: "https://play.google.com/store/apps/details?id=example.placeholder", // PLACEHOLDER
+  chatBaseUrl: "https://web.teemeup.example", // PLACEHOLDER: confirm the real web chat URL with the app team
+  nearby,
+});
+
+const v2 = (sub: string, what: string, on = "2026-10-28") => ({ source: `${sub}.bookings.v2.courserev.ai (${what})`, retrievedOn: on });
+const demo = (club: string) => ({ source: `courserev-seo-geo-demo-site.vercel.app/clubs/${club} (FAQ, reworded)`, retrievedOn: "2026-10-28" });
 
 export const highlandCreek: CourseData = {
   facts: {
@@ -45,22 +38,14 @@ export const highlandCreek: CourseData = {
     address: { street: "7101 Highland Creek Parkway", postalCode: "28269" },
     phone: "+17048759000",
     website: "https://highlandcreekgolfclub.com",
-    geo: { lat: 35.3808938, lng: -80.7629295 }, // CourseRev v2 booking page ("Get Directions" link), read 23 Oct 2026
+    geo: { lat: 35.3808938, lng: -80.7629295 },
     holes: 18,
     par: 72,
     designer: "Clifton, Ezell and Clifton",
     yearOpened: null, // TODO: not published on the pages read
     description:
       "Highland Creek is an 18-hole championship course in Charlotte, North Carolina designed by Clifton, Ezell and Clifton. It has Bermuda fairways, more than 65 bunkers and water in play on 11 holes, and the clubhouse has a taproom and a beer garden.",
-    amenities: [
-      "Driving range",
-      "Putting green",
-      "Chipping green and practice bunker",
-      "Clubhouse with locker rooms",
-      "Taproom and beer garden",
-      "Golf lessons",
-      "Outings and events",
-    ],
+    amenities: ["Driving range", "Putting green", "Chipping green and practice bunker", "Clubhouse with locker rooms", "Taproom and beer garden", "Golf lessons", "Outings and events"],
     // Banner of the CourseRev v2 page (CourseRev CDN). Licensing for use on Teemeup is to be confirmed with the club.
     photos: [{ url: "https://storage.googleapis.com/courserev-cdn/course/org-banner-1778849042200.jpeg", alt: "Fairway and flagstick at Highland Creek Golf Club", width: 1280, height: 550 }],
     logoUrl: null,
@@ -68,11 +53,7 @@ export const highlandCreek: CourseData = {
     optional: { yardsMin: 5080, yardsMax: 7000 },
   },
   ops: {
-    teeTimes: [
-      { date: "2026-10-27", asOf: "2026-10-27", slots: toSlots(DAY_27) },
-      { date: "2026-10-28", asOf: "2026-10-27", slots: toSlots(DAY_28) },
-      { date: "2026-10-29", asOf: "2026-10-27", slots: toSlots(DAY_29) },
-    ],
+    teeTimes: days("highland-creek-golf-club"),
     policies: {
       cancellation: "Changes must be made at least 24 hours before the tee time.",
       dressCode: "Proper golf attire is required.",
@@ -81,61 +62,18 @@ export const highlandCreek: CourseData = {
     },
     faq: [], // TODO: questions golfers actually ask; do not invent
   },
-  teemeup: {
-    deepLinkUrl: "https://example.invalid/open?course=highland-creek-golf-club", // PLACEHOLDER
-    qrImageUrl: null,
-    appStoreUrl: "https://apps.apple.com/app/id0000000000", // PLACEHOLDER
-    playStoreUrl: "https://play.google.com/store/apps/details?id=example.placeholder", // PLACEHOLDER
-    chatBaseUrl: "https://web.teemeup.example", // PLACEHOLDER: confirm the real web chat URL with the app team
-    nearby: ["the-tradition-golf-club"],
-  },
+  teemeup: teemeup("highland-creek-golf-club", ["the-tradition-golf-club", "the-divide-golf-club", "waterford-golf-club"]),
   provenance: {
-    geo: { source: "highlandcreekgolfclub.bookings.v2.courserev.ai (Get Directions link)", retrievedOn: "2026-10-23" },
-    photos: { source: "highlandcreekgolfclub.bookings.v2.courserev.ai (banner, CourseRev CDN)", retrievedOn: "2026-10-23" },
+    geo: v2("highlandcreekgolfclub", "Get Directions link", "2026-10-23"),
+    photos: v2("highlandcreekgolfclub", "banner, CourseRev CDN", "2026-10-23"),
     description: { source: "highlandcreekgolfclub.com (reworded)", retrievedOn: "2026-10-23" },
     designer: { source: "highlandcreekgolfclub.com", retrievedOn: "2026-10-23" },
     // NOTE: the v2 booking page lists +1 704 486 2984, the club site +1 704 875 9000. Confirm which is the public number.
     phone: { source: "highlandcreekgolfclub.com", retrievedOn: "2026-10-23" },
-    teeTimes: { source: "highlandcreekgolfclub.bookings.v2.courserev.ai (snapshot)", retrievedOn: "2026-10-27" },
+    teeTimes: v2("highlandcreekgolfclub", "tee time API, snapshot"),
     policies: { source: "highlandcreekgolfclub.com/course-rates (page dated 2025-03-27)", retrievedOn: "2026-10-23" },
   },
 };
-
-
-/**
- * Second example: The Tradition Golf Club (Charlotte, NC), a real CourseRev club close to Highland Creek.
- * Facts: Chronogolf listing for the club (reworded) and the CourseRev v2 booking page, read 23 Oct 2026.
- * Tee times: snapshot of the v2 page for 27, 28 and 29 Oct 2026.
- */
-const TRADITION_27: [string, number, number][] = [
-  ["11:10", 50.97, 1], ["11:20", 50.97, 4], ["11:30", 50.97, 2], ["11:40", 50.97, 4], ["11:50", 50.97, 4],
-  ["12:00", 50.97, 1], ["12:20", 50.97, 4], ["12:30", 50.97, 4], ["12:40", 50.97, 4], ["12:50", 50.97, 4],
-  ["13:00", 50.97, 3], ["13:20", 50.97, 4], ["13:30", 50.97, 4], ["13:50", 50.97, 4], ["14:00", 50.97, 4],
-  ["14:10", 50.97, 4], ["14:20", 50.97, 4], ["14:30", 50.97, 2], ["14:40", 50.97, 1], ["14:50", 50.97, 4],
-  ["15:00", 50.97, 4], ["15:10", 50.97, 4], ["15:20", 50.97, 4], ["15:30", 50.97, 2], ["16:20", 39.92, 4],
-  ["16:50", 39.92, 4],
-];
-const TRADITION_28: [string, number, number][] = [
-  ["07:40", 45.87, 1], ["07:50", 45.87, 4], ["08:00", 58.62, 4], ["08:10", 58.62, 4], ["08:20", 58.62, 4],
-  ["08:30", 58.62, 4], ["08:40", 58.62, 4], ["08:50", 58.62, 4], ["09:10", 58.62, 4], ["10:30", 58.62, 4],
-  ["10:40", 58.62, 4], ["10:50", 58.62, 4], ["11:00", 50.97, 2], ["11:10", 50.97, 4], ["11:20", 50.97, 4],
-  ["12:10", 50.97, 4], ["12:20", 50.97, 4], ["12:40", 50.97, 4], ["12:50", 50.97, 4], ["13:00", 50.97, 4],
-  ["13:10", 50.97, 4], ["13:20", 50.97, 4], ["13:30", 50.97, 4], ["13:40", 50.97, 4], ["13:50", 50.97, 1],
-  ["14:10", 48.42, 4], ["14:20", 48.42, 4], ["14:30", 48.42, 4], ["14:40", 48.42, 4], ["14:50", 48.42, 4],
-  ["15:00", 48.42, 4], ["15:10", 48.42, 4], ["15:20", 48.42, 4], ["15:30", 48.42, 4], ["15:40", 48.42, 4],
-  ["16:00", 38.02, 4], ["16:10", 38.02, 4], ["16:20", 38.02, 4], ["16:30", 38.02, 4], ["16:40", 38.02, 4],
-];
-const TRADITION_29: [string, number, number][] = [
-  ["08:10", 58.62, 1], ["08:20", 58.62, 4], ["08:30", 58.62, 2], ["09:00", 58.62, 2], ["09:10", 58.62, 1],
-  ["09:20", 58.62, 2], ["09:50", 58.62, 2], ["10:00", 58.62, 2], ["10:30", 58.62, 4], ["10:40", 58.62, 4],
-  ["11:00", 45.87, 3], ["11:10", 45.87, 4], ["11:20", 45.87, 4], ["11:30", 45.87, 4], ["11:40", 45.87, 4],
-  ["11:50", 45.87, 4], ["12:00", 45.87, 2], ["12:10", 45.87, 4], ["12:20", 45.87, 4], ["12:30", 45.87, 4],
-  ["12:40", 45.87, 4], ["12:50", 45.87, 4], ["13:00", 45.87, 1], ["13:10", 45.87, 4], ["13:20", 45.87, 4],
-  ["13:30", 45.87, 4], ["13:40", 45.87, 4], ["13:50", 45.87, 4], ["14:10", 53.52, 2], ["14:20", 53.52, 4],
-  ["14:30", 53.52, 4], ["14:40", 53.52, 4], ["14:50", 53.52, 4], ["15:00", 53.52, 4], ["15:10", 53.52, 4],
-  ["15:20", 53.52, 4], ["15:30", 53.52, 4], ["16:10", 41.82, 2], ["16:20", 41.82, 4], ["16:30", 41.82, 2],
-  ["16:40", 41.82, 2],
-];
 
 export const tradition: CourseData = {
   facts: {
@@ -146,8 +84,8 @@ export const tradition: CourseData = {
     city: "Charlotte",
     address: { street: "3800 Prosperity Church Road", postalCode: "28269" },
     phone: "+17045037529",
-    website: null, // TODO: the club's own site was not confirmed
-    geo: { lat: 35.3508232, lng: -80.7743232 }, // CourseRev v2 booking page ("Get Directions" link)
+    website: "https://thetraditiongolfclub.com",
+    geo: { lat: 35.3508232, lng: -80.7743232 },
     holes: 18,
     par: 72,
     designer: "John Cassell II",
@@ -155,36 +93,165 @@ export const tradition: CourseData = {
     description:
       "The Tradition is an 18-hole, par-72 course in Charlotte, North Carolina, designed by John Cassell II and opened in 1996. It has tree-lined fairways with three doglegs, small greens, eleven water hazards, and Bermudagrass on the fairways and greens.",
     amenities: ["Driving range", "Two practice putting greens", "Two practice bunkers", "Clubhouse with dining and a golf shop", "Outings and events"],
-    // Banner of the CourseRev v2 page (CourseRev CDN). Licensing is to be confirmed with the club. The alt text describes the subject only: the image content was not reviewed.
+    // Banner of the CourseRev v2 page. Licensing is to be confirmed with the club. The alt text describes the subject only: the image content was not reviewed.
     photos: [{ url: "https://storage.googleapis.com/courserev-cdn/course/org-banner-1784753398083.jpeg", alt: "The Tradition Golf Club, Charlotte, North Carolina", width: 1500, height: 750 }],
     logoUrl: null,
     themeColor: null, // TODO: not known; falls back to the Teemeup purple
   },
   ops: {
-    teeTimes: [
-      { date: "2026-10-27", asOf: "2026-10-27", slots: toSlots(TRADITION_27) },
-      { date: "2026-10-28", asOf: "2026-10-27", slots: toSlots(TRADITION_28) },
-      { date: "2026-10-29", asOf: "2026-10-27", slots: toSlots(TRADITION_29) },
-    ],
+    teeTimes: days("the-tradition-golf-club"),
     policies: { maxPlayers: 4 }, // From the v2 booking page, which offers 1 to 4 players. No cancellation or dress code text was found.
     faq: [],
   },
-  teemeup: {
-    deepLinkUrl: "https://example.invalid/open?course=the-tradition-golf-club", // PLACEHOLDER
-    qrImageUrl: null,
-    appStoreUrl: "https://apps.apple.com/app/id0000000000", // PLACEHOLDER
-    playStoreUrl: "https://play.google.com/store/apps/details?id=example.placeholder", // PLACEHOLDER
-    chatBaseUrl: "https://web.teemeup.example", // PLACEHOLDER
-    nearby: ["highland-creek-golf-club"],
-  },
+  teemeup: teemeup("the-tradition-golf-club", ["highland-creek-golf-club", "the-divide-golf-club", "waterford-golf-club"]),
   provenance: {
     description: { source: "Chronogolf listing for The Tradition (reworded)", retrievedOn: "2026-10-23" },
     designer: { source: "Chronogolf listing for The Tradition", retrievedOn: "2026-10-23" },
     yearOpened: { source: "Chronogolf listing for The Tradition", retrievedOn: "2026-10-23" },
-    phone: { source: "thetraditiongolfclub.bookings.v2.courserev.ai and Chronogolf listing (same number)", retrievedOn: "2026-10-23" },
-    geo: { source: "thetraditiongolfclub.bookings.v2.courserev.ai (Get Directions link)", retrievedOn: "2026-10-23" },
-    photos: { source: "thetraditiongolfclub.bookings.v2.courserev.ai (banner, CourseRev CDN)", retrievedOn: "2026-10-23" },
-    teeTimes: { source: "thetraditiongolfclub.bookings.v2.courserev.ai (snapshot)", retrievedOn: "2026-10-27" },
-    policies: { source: "thetraditiongolfclub.bookings.v2.courserev.ai (player count offered)", retrievedOn: "2026-10-23" },
+    phone: v2("thetraditiongolfclub", "course details", "2026-10-23"),
+    website: v2("thetraditiongolfclub", "course details"),
+    geo: v2("thetraditiongolfclub", "Get Directions link", "2026-10-23"),
+    photos: v2("thetraditiongolfclub", "banner, CourseRev CDN", "2026-10-23"),
+    teeTimes: v2("thetraditiongolfclub", "tee time API, snapshot"),
+    policies: v2("thetraditiongolfclub", "player count offered", "2026-10-23"),
+  },
+};
+
+export const theDivide: CourseData = {
+  facts: {
+    slug: "the-divide-golf-club",
+    name: "The Divide Golf Club",
+    country: "us",
+    region: "nc",
+    city: "Matthews",
+    address: { street: "6803 Stevens Mill Road", postalCode: "28104" },
+    // NOTE: the v2 course record lists +1 704 628 6438; the organization record lists +1 980 360 4478. Confirm.
+    phone: "+17046286438",
+    website: "https://thedividegolfclub.com",
+    geo: { lat: 35.1290016, lng: -80.6340228 },
+    holes: 18,
+    par: null, // TODO: not confirmed on the pages read
+    designer: "John Cassell II",
+    yearOpened: null,
+    description:
+      "The Divide is an 18-hole public course in Matthews, North Carolina, designed by John Cassell II. The course crosses the line between Mecklenburg and Union counties and has Diamond Zoysia greens.",
+    amenities: [], // TODO
+    // Banner of the CourseRev v2 page. Licensing to be confirmed; image content not reviewed, so the alt text names the place only.
+    photos: [{ url: "https://storage.googleapis.com/courserev-cdn/course/org-banner-1784748864666.jpeg", alt: "The Divide Golf Club, Matthews, North Carolina", width: 1800, height: 750 }],
+    logoUrl: null,
+    themeColor: null,
+  },
+  ops: {
+    teeTimes: days("the-divide-golf-club"),
+    policies: {
+      cancellation: "Changes or cancellations must be made at least 24 hours before the tee time; later cancellations are charged the full rate.",
+      walking: "Walking and riding rates are both offered.",
+      dressCode: "Proper golf attire is required.",
+      maxPlayers: 4,
+      bookingWindowDays: 14,
+    },
+    faq: [],
+  },
+  teemeup: teemeup("the-divide-golf-club", ["highland-creek-golf-club", "the-tradition-golf-club", "waterford-golf-club"]),
+  provenance: {
+    description: demo("the-divide"),
+    designer: v2("thedividegolfclub", "course details"),
+    phone: v2("thedividegolfclub", "course details"),
+    website: v2("thedividegolfclub", "course details"),
+    geo: v2("thedividegolfclub", "course details, map link"),
+    photos: v2("thedividegolfclub", "banner, CourseRev CDN"),
+    teeTimes: v2("thedividegolfclub", "tee time API, snapshot"),
+    policies: demo("the-divide"),
+  },
+};
+
+export const waterford: CourseData = {
+  facts: {
+    slug: "waterford-golf-club",
+    name: "Waterford Golf Club",
+    country: "us",
+    region: "sc",
+    city: "Rock Hill",
+    address: { street: "1900 Clubhouse Road", postalCode: "29730" },
+    phone: "+18033240300",
+    website: "https://thelinksatwaterford.com",
+    geo: { lat: 34.9493873, lng: -80.9450954 },
+    holes: 18,
+    par: 72,
+    designer: "Hale Irwin",
+    yearOpened: null,
+    description:
+      "Waterford is an 18-hole, par-72 course in Rock Hill, South Carolina, designed by Hale Irwin. It runs through hardwoods and rolling ground along the Catawba River, with water in play on 16 of the 18 holes.",
+    amenities: [], // TODO
+    photos: [{ url: "https://storage.googleapis.com/courserev-cdn/course/org-banner-1785906424754.jpeg", alt: "Waterford Golf Club, Rock Hill, South Carolina", width: 2000, height: 750 }],
+    logoUrl: null,
+    themeColor: null,
+  },
+  ops: {
+    teeTimes: days("waterford-golf-club"),
+    policies: {
+      cancellation: "Changes or cancellations must be made at least 24 hours before the tee time; later cancellations are charged the full rate.",
+      walking: "Walking is allowed any time Monday to Friday, and from 1:00 PM on weekends and holidays.",
+      dressCode: "Proper golf attire is required. Outside food, coolers and alcohol are not allowed.",
+      maxPlayers: 4,
+      bookingWindowDays: 14,
+    },
+    faq: [],
+  },
+  teemeup: teemeup("waterford-golf-club", ["the-divide-golf-club", "the-tradition-golf-club", "highland-creek-golf-club"]),
+  provenance: {
+    description: demo("waterford"),
+    designer: v2("waterfordgolfclub", "course details"),
+    phone: v2("waterfordgolfclub", "course details"),
+    website: v2("waterfordgolfclub", "course details"),
+    geo: v2("waterfordgolfclub", "course details"),
+    photos: v2("waterfordgolfclub", "banner, CourseRev CDN"),
+    teeTimes: v2("waterfordgolfclub", "tee time API, snapshot"),
+    policies: demo("waterford"),
+  },
+};
+
+export const cottonwood: CourseData = {
+  facts: {
+    slug: "cottonwood-golf-club",
+    name: "Cottonwood Golf Club",
+    country: "us",
+    region: "ca",
+    city: "El Cajon",
+    address: { street: "3121 Willow Glen Drive", postalCode: "92019" },
+    phone: "+16194429891",
+    website: "https://cottonwoodgolf.com",
+    geo: { lat: 32.7479326, lng: -116.9106278 },
+    holes: 18,
+    par: 72,
+    designer: null, // TODO: the v2 text names an architect, not verified
+    yearOpened: null,
+    description:
+      "Cottonwood is a public 18-hole golf course in El Cajon, California, in the hills of Rancho San Diego about 20 minutes from downtown San Diego.",
+    amenities: [], // TODO
+    photos: [{ url: "https://storage.googleapis.com/courserev-cdn/course/org-banner-1787691404975.jpeg", alt: "Cottonwood Golf Club, El Cajon, California", width: 1500, height: 350 }],
+    logoUrl: null,
+    themeColor: null,
+  },
+  ops: {
+    teeTimes: days("cottonwood-golf-club"),
+    policies: {
+      cancellation: "Changes or cancellations need at least 24 hours' notice.",
+      walking: "Walking is allowed at all times; carts can be rented.",
+      dressCode: "Collared shirts or golf mock necks and tailored pants or shorts are required. No denim, gym wear or metal spikes.",
+      maxPlayers: 4,
+      bookingWindowDays: 14,
+    },
+    faq: [],
+  },
+  teemeup: teemeup("cottonwood-golf-club", []),
+  provenance: {
+    description: demo("cottonwood"),
+    phone: v2("cottonwoodgolfclub", "course details"),
+    website: v2("cottonwoodgolfclub", "course details"),
+    geo: v2("cottonwoodgolfclub", "course details"),
+    photos: v2("cottonwoodgolfclub", "banner, CourseRev CDN"),
+    teeTimes: v2("cottonwoodgolfclub", "tee time API, snapshot"),
+    policies: demo("cottonwood"),
   },
 };

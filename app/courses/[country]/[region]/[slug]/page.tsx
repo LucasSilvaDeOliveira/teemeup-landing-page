@@ -184,12 +184,13 @@ export default async function CoursePage({ params }: Props) {
                       <ul className="plain">{f.amenities.map((a) => <li key={a}>{a}</li>)}</ul>
                     </>
                   )}
-                  {(policyLines.length > 0 || p.maxPlayers) && (
+                  {(policyLines.length > 0 || p.maxPlayers || p.bookingWindowDays) && (
                     <div style={{ marginTop: f.amenities.length ? 28 : 0 }}>
                       <h2>Booking policies</h2>
                       <ul className="plain">
                         {policyLines.map((l) => <li key={l}>{l}</li>)}
                         {p.maxPlayers && <li>Up to {p.maxPlayers} players per booking.</li>}
+                        {p.bookingWindowDays && <li>Tee times open {p.bookingWindowDays} days ahead.</li>}
                       </ul>
                     </div>
                   )}
