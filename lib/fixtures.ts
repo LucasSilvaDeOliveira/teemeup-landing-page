@@ -5,7 +5,7 @@ import { SNAPSHOT_AS_OF, TEE_TIMES } from "./fixture-tee-times";
  * EXAMPLE DATA for five real CourseRev clubs (Highland Creek, The Tradition, The Divide, Waterford, Cottonwood).
  * Placeholder for the real data layer, which the dev team defines. Sources are in each `provenance`.
  * Facts are reworded in our own words; anything not found is left empty on purpose (TODO), never guessed.
- * Tee times: `fixture-tee-times.ts` (CourseRev v2 booking API, read 28 Oct 2026 for 29-31 Oct).
+ * Tee times: `fixture-tee-times.ts` (CourseRev v2 booking API, read 3 Nov 2026 for 4-17 Nov).
  */
 
 /** One day from the snapshot, or null if the snapshot does not cover it. */
@@ -76,7 +76,7 @@ export const highlandCreek: CourseData = {
     designer: { source: "highlandcreekgolfclub.com", retrievedOn: "2026-10-23" },
     // NOTE: the v2 booking page lists +1 704 486 2984, the club site +1 704 875 9000. Confirm which is the public number.
     phone: { source: "highlandcreekgolfclub.com", retrievedOn: "2026-10-23" },
-    teeTimes: v2("highlandcreekgolfclub", "tee time API, snapshot"),
+    teeTimes: v2("highlandcreekgolfclub", "tee time API, snapshot", "2026-11-03"),
     policies: { source: "highlandcreekgolfclub.com/course-rates (page dated 2025-03-27)", retrievedOn: "2026-10-23" },
   },
 };
@@ -119,7 +119,7 @@ export const tradition: CourseData = {
     website: v2("thetraditiongolfclub", "course details"),
     geo: v2("thetraditiongolfclub", "Get Directions link", "2026-10-23"),
     photos: v2("thetraditiongolfclub", "banner, CourseRev CDN", "2026-10-23"),
-    teeTimes: v2("thetraditiongolfclub", "tee time API, snapshot"),
+    teeTimes: v2("thetraditiongolfclub", "tee time API, snapshot", "2026-11-03"),
     policies: v2("thetraditiongolfclub", "player count offered", "2026-10-23"),
   },
 };
@@ -168,7 +168,7 @@ export const theDivide: CourseData = {
     website: v2("thedividegolfclub", "course details"),
     geo: v2("thedividegolfclub", "course details, map link"),
     photos: v2("thedividegolfclub", "banner, CourseRev CDN"),
-    teeTimes: v2("thedividegolfclub", "tee time API, snapshot"),
+    teeTimes: v2("thedividegolfclub", "tee time API, snapshot", "2026-11-03"),
     policies: demo("the-divide"),
   },
 };
@@ -203,7 +203,7 @@ export const waterford: CourseData = {
       walking: "Walking is allowed any time Monday to Friday, and from 1:00 PM on weekends and holidays.",
       dressCode: "Proper golf attire is required. Outside food, coolers and alcohol are not allowed.",
       maxPlayers: 4,
-      // The demo FAQ says 14 days, but on 28 Oct the v2 API had times only up to 7 Nov (10 days). Confirm with the club.
+      // The demo FAQ says 14 days; the v2 API only has times 10 days ahead. Confirm with the club.
       bookingWindowDays: 10,
     },
     faq: [],
@@ -216,7 +216,7 @@ export const waterford: CourseData = {
     website: v2("waterfordgolfclub", "course details"),
     geo: v2("waterfordgolfclub", "course details"),
     photos: v2("waterfordgolfclub", "banner, CourseRev CDN"),
-    teeTimes: v2("waterfordgolfclub", "tee time API, snapshot"),
+    teeTimes: v2("waterfordgolfclub", "tee time API, snapshot", "2026-11-03"),
     policies: demo("waterford"),
   },
 };
@@ -251,7 +251,7 @@ export const cottonwood: CourseData = {
       walking: "Walking is allowed at all times; carts can be rented.",
       dressCode: "Collared shirts or golf mock necks and tailored pants or shorts are required. No denim, gym wear or metal spikes.",
       maxPlayers: 4,
-      // The demo FAQ says 14 days, but on 28 Oct the v2 API had times only up to 4 Nov (7 days). Confirm with the club.
+      // The demo FAQ says 14 days; the v2 API only has times 7 days ahead. Confirm with the club.
       bookingWindowDays: 7,
     },
     faq: [],
@@ -263,7 +263,7 @@ export const cottonwood: CourseData = {
     website: v2("cottonwoodgolfclub", "course details"),
     geo: v2("cottonwoodgolfclub", "course details"),
     photos: v2("cottonwoodgolfclub", "banner, CourseRev CDN"),
-    teeTimes: v2("cottonwoodgolfclub", "tee time API, snapshot"),
+    teeTimes: v2("cottonwoodgolfclub", "tee time API, snapshot", "2026-11-03"),
     policies: demo("cottonwood"),
   },
 };
