@@ -24,8 +24,8 @@ const days = (slug: string): TeeTimeDay[] =>
 const teemeup = (slug: string, nearby: string[]): TeemeupLayer => ({
   deepLinkUrl: `https://example.invalid/open?course=${slug}`, // PLACEHOLDER
   qrImageUrl: null,
-  appStoreUrl: "https://apps.apple.com/us/app/teemeup-golf-tee-times/id6763700956", // from teemeup.ai, 28 Oct 2026
-  playStoreUrl: "https://play.google.com/store/apps/details?id=com.teemeupai", // from teemeup.ai, 28 Oct 2026
+  appStoreUrl: "https://apps.apple.com/us/app/teemeup-golf-tee-times/id6763700956", // public link on teemeup.ai
+  playStoreUrl: "https://play.google.com/store/apps/details?id=com.teemeupai", // public link on teemeup.ai
   chatBaseUrl: "https://web.teemeup.example", // PLACEHOLDER: confirm the real web chat URL with the app team
   nearby,
 });
@@ -143,7 +143,7 @@ export const theDivide: CourseData = {
     yearOpened: null,
     description:
       "The Divide is an 18-hole public course in Matthews, North Carolina, designed by John Cassell II. The course crosses the line between Mecklenburg and Union counties and has Diamond Zoysia greens.",
-    amenities: [], // TODO
+    amenities: [], // TODO: not found in public sources
     // Banner of the CourseRev v2 page. Licensing to be confirmed; image content not reviewed, so the alt text names the place only.
     photos: [{ url: "https://storage.googleapis.com/courserev-cdn/course/org-banner-1784748864666.jpeg", alt: "The Divide Golf Club, Matthews, North Carolina", width: 1800, height: 750 }],
     logoUrl: null,
@@ -191,7 +191,7 @@ export const waterford: CourseData = {
     yearOpened: null,
     description:
       "Waterford is an 18-hole, par-72 course in Rock Hill, South Carolina, designed by Hale Irwin. It runs through hardwoods and rolling ground along the Catawba River, with water in play on 16 of the 18 holes.",
-    amenities: [], // TODO
+    amenities: [], // TODO: not found in public sources
     photos: [{ url: "https://storage.googleapis.com/courserev-cdn/course/org-banner-1785906424754.jpeg", alt: "Waterford Golf Club, Rock Hill, South Carolina", width: 2000, height: 750 }],
     logoUrl: null,
     themeColor: null,
@@ -203,7 +203,7 @@ export const waterford: CourseData = {
       walking: "Walking is allowed any time Monday to Friday, and from 1:00 PM on weekends and holidays.",
       dressCode: "Proper golf attire is required. Outside food, coolers and alcohol are not allowed.",
       maxPlayers: 4,
-      // The demo FAQ says 14 days; the v2 API only has times 10 days ahead. Confirm with the club.
+      // The CourseRev SEO demo site says 14 days; the v2 booking API only has times 10 days ahead. Confirm with the club.
       bookingWindowDays: 10,
     },
     faq: [],
@@ -239,7 +239,7 @@ export const cottonwood: CourseData = {
     yearOpened: null,
     description:
       "Cottonwood is a public 18-hole golf course in El Cajon, California, in the hills of Rancho San Diego about 20 minutes from downtown San Diego.",
-    amenities: [], // TODO
+    amenities: [], // TODO: not found in public sources
     photos: [{ url: "https://storage.googleapis.com/courserev-cdn/course/org-banner-1787691404975.jpeg", alt: "Cottonwood Golf Club, El Cajon, California", width: 1500, height: 350 }],
     logoUrl: null,
     themeColor: null,
@@ -251,7 +251,7 @@ export const cottonwood: CourseData = {
       walking: "Walking is allowed at all times; carts can be rented.",
       dressCode: "Collared shirts or golf mock necks and tailored pants or shorts are required. No denim, gym wear or metal spikes.",
       maxPlayers: 4,
-      // The demo FAQ says 14 days; the v2 API only has times 7 days ahead. Confirm with the club.
+      // The CourseRev SEO demo site says 14 days; the v2 booking API only has times 7 days ahead. Confirm with the club.
       bookingWindowDays: 7,
     },
     faq: [],

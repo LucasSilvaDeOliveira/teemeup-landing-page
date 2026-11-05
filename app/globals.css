@@ -136,9 +136,7 @@ footer.foot { border-top: 1px solid var(--line); padding: 28px 0 40px; font-size
 @media (max-width: 767px) { .prompt[data-desktop-only] { display: none; } }
 @media (min-width: 768px) { .stores-mobile { display: none; } }
 
-/* Tee times: hint and date picker */
-
-/* Tee times */
+/* Tee times: hint, filters, date picker, grid */
 .tt-hint { margin: 6px 0 0; font-weight: 600; }
 .tt-filters { margin: 18px 0 24px; display: grid; gap: 14px; }
 .flabel { margin: 0 0 6px; font-size: 13px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }

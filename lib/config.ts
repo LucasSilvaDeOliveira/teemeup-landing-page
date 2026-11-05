@@ -9,7 +9,7 @@ export const siteUrl: string | null = raw || null;
 export const indexingAllowed: boolean = siteUrl !== null && process.env.NEXT_PUBLIC_NOINDEX !== "1";
 
 /**
- * Brand-level links for pages that are not about one course (the hubs). Store links are the ones on teemeup.ai (28 Oct 2026);
+ * Brand-level links for pages that are not about one course (the hubs). Store links are the public ones on teemeup.ai;
  * the chat URL is a PLACEHOLDER the app team confirms.
  * Course pages use the per-course values in `teemeup` (deep link, chat base).
  */

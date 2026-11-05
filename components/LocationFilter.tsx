@@ -13,7 +13,8 @@ type Props = { tree: LocationTree; country: string; state: string | null };
 /**
  * Country / state / city filter. Country and state are pages (choosing one navigates to its hub URL);
  * city is a filter inside the state hub (it hides the other city groups and is kept in the URL hash, so no new URLs
- * are created). Every option and count comes from the data. The hubs also keep plain links to every state for crawlers.
+ * are created). Every option and count comes from the data. Crawlers reach the state hubs through the course page
+ * breadcrumbs and the sitemap.
  */
 export function LocationFilter({ tree, country, state }: Props) {
   const uid = useId();

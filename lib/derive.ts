@@ -89,18 +89,16 @@ export function slotPrompt(name: string, date: string, slot: TeeTimeSlot) {
   return `Book a tee time at ${name} on ${longDate(date)} at ${formatTime(slot.time)}`;
 }
 
-/** Example questions for Bob. Only questions the data can actually support are produced. */
 /**
  * Example questions shown as links to the chat. Worded relative to when the golfer clicks ("tomorrow", "this weekend"),
  * so a cached page never offers a date that has passed. Availability-based ones only appear when the window has
- * matching times; Bob answers with live data either way.
+ * matching times; Bob answers with live data either way. Phones show the first three, so order matters.
  * NOTE: the weather question assumes Bob can answer it (the CourseRev booking page already shows a forecast). Confirm with the app team.
  */
 export function askBobPrompts(c: CourseData): string[] {
   const name = c.facts.name;
   const days = c.ops.teeTimes.map(summarizeDay).filter((s) => s.count > 0);
   const any = (k: "hasMorning" | "hasFour" | "hasTwilight") => days.some((s) => s[k]);
-  // Order matters: phones show only the first three (the broadest questions).
   const out: string[] = [`What tee times are open at ${name} tomorrow?`];
   if (days.some((s) => s.minPrice !== null)) out.push(`What is the cheapest tee time at ${name} this week?`);
   if (any("hasMorning")) out.push(any("hasFour") ? `Find a morning tee time for 4 players at ${name}` : `Find a morning tee time at ${name}`);

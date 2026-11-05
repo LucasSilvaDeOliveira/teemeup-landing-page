@@ -1,6 +1,6 @@
 /**
- * CourseData: contract between the data layer (Nivas/VJ) and the SEO landing page template.
- * Draft v0, 23 Oct 2026. Three blocks, by how hard each is to obtain and how often it changes:
+ * CourseData: contract between the data layer and the course page template.
+ * Three blocks, by how hard each is to obtain and how often it changes:
  *   1. CourseFacts  - public and stable (name, address, designer...). Mostly obtainable without asking the club.
  *   2. CourseOps    - operational and changing (tee times, prices, policies, FAQ). Comes from the booking data.
  *   3. TeemeupLayer - product-side (app links, chat deep links, related courses). Owned by Teemeup.

@@ -1,5 +1,5 @@
 /**
- * Decorative topography seeded from the slug (same idea as the existing teemeup course landing).
+ * Decorative topographic lines in the page background, seeded from the slug.
  * Concentric, slightly irregular rings; the same slug always gives the same drawing.
  */
 function hash(str: string): number {

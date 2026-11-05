@@ -3,7 +3,8 @@ import type { TeeTimeDay } from "./course-data";
 import { cottonwood, fixtureDay, highlandCreek, theDivide, tradition, waterford } from "./fixtures";
 
 /**
- * DATA LAYER STUB. The dev team replaces these two functions with the real source.
+ * DATA LAYER STUB. The dev team replaces the functions in this file (getCourse, listCourses, getNearby, getTeeTimes)
+ * with the real source.
  * Contract: return null for an unknown course; throw for transient failures (the page then shows the error boundary).
  * Keep them fast and cacheable: the page revalidates every few minutes (see `revalidate` in the page file).
  */

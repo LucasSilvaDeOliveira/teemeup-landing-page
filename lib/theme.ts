@@ -1,6 +1,6 @@
 /**
  * Course accent color, safe for a white label on the button (WCAG AA, 4.5:1).
- * Darkens the color in 4% steps; past 40% it falls back to the Teemeup purple. Same rule as the existing course landing.
+ * Darkens the color in 4% steps; past 40% it falls back to the Teemeup purple.
  */
 const PURPLE = "#4817CE";
 type RGB = [number, number, number];
