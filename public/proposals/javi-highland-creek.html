@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Highland Creek Golf Club Tee Times – Charlotte, NC | Teemeup</title>
+<meta name="description" content="Book tee times at Highland Creek Golf Club in Charlotte, NC with Bob, the AI that finds your tee time. Open times from $38.99 per player.">
+<meta name="color-scheme" content="light">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="preload" as="image" href="https://storage.googleapis.com/courserev-cdn/course/org-banner-1778849042200.jpeg" fetchpriority="high">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"GolfCourse","name":"Highland Creek Golf Club","description":"Highland Creek is an 18-hole championship course in Charlotte, North Carolina designed by Clifton, Ezell and Clifton. It has Bermuda fairways, more than 65 bunkers and water in play on 11 holes, and the clubhouse has a taproom and a beer garden.","telephone":"+17048759000","address":{"@type":"PostalAddress","streetAddress":"7101 Highland Creek Parkway","addressLocality":"Charlotte","addressRegion":"NC","postalCode":"28269","addressCountry":"US"},"geo":{"@type":"GeoCoordinates","latitude":35.3808938,"longitude":-80.7629295},"image":["https://storage.googleapis.com/courserev-cdn/course/org-banner-1778849042200.jpeg"],"sameAs":["https://highlandcreekgolfclub.com"]}
+</script>
+<style>
+/* ---------- tokens ---------- */
+:root{
+  --brand:#4817CE; --brand-hi:#5D28EE; --brand-deep:#2A0C86;
+  --mint:#7DF0AF;
+  --bg:#F8F7FC; --panel:#FFFFFF; --tint:#F1EDFB; --tint-2:#E7E0FA;
+  --ink:#0D0D1A; --ink-2:#47455C; --ink-3:#6A6880;
+  --line:rgba(27,11,92,.11);
+  --accent:#4817CE; --good:#0E7A36; --good-bg:#E4F7EB; --warn:#A54A06;
+  --night:#07070F;
+  --shadow:0 1px 2px rgba(27,11,92,.06),0 12px 28px -8px rgba(27,11,92,.18),0 40px 80px -24px rgba(27,11,92,.28);
+  --r-s:10px; --r-m:14px; --r-l:22px; --pill:999px;
+  --head:"Space Grotesk",system-ui,sans-serif;
+  --body:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --ease:cubic-bezier(.16,1,.3,1);
+  --hero-h:640px; --nav-h:68px; --rail-w:432px;
+}
+:root[data-theme="dark"]{
+    --bg:#090912; --panel:#12121F; --tint:#1A1830; --tint-2:#262247;
+    --ink:#EFEDF8; --ink-2:#B9B6CD; --ink-3:#918EA9;
+    --line:rgba(255,255,255,.1);
+    --accent:#A991FF; --good:#5BE08F; --good-bg:rgba(34,197,94,.14); --warn:#F2A65A;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 24px 60px -16px rgba(0,0,0,.7);
+}
+/* ---------- base ---------- */
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:20px}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1rem/1.6 var(--body);-webkit-font-smoothing:antialiased;accent-color:var(--brand);caret-color:var(--brand)}
+::selection{background:var(--brand);color:#fff}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+h1,h2,h3,p,dl,dd,ul{margin:0;padding:0}
+ul{list-style:none}
+h1,h2,h3{font-family:var(--head);font-weight:700;letter-spacing:-.025em;line-height:1.1;text-wrap:balance}
+:focus-visible{outline:2.5px solid var(--accent);outline-offset:3px;border-radius:6px}
+.on-dark :focus-visible,.on-dark:focus-visible{outline-color:#fff}
+.num{font-variant-numeric:tabular-nums}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.shell{max-width:1272px;margin-inline:auto;padding-inline:20px}
+@media (min-width:768px){.shell{padding-inline:32px}}
+
+/* ---------- hero backdrop + nav ---------- */
+.backdrop{position:absolute;inset:0 0 auto 0;height:var(--hero-h);overflow:hidden;background:var(--bg);z-index:0}
+.backdrop img{width:100%;height:100%;object-fit:cover;object-position:50% 58%}
+.backdrop::after{content:"";position:absolute;inset:0;background:
+  linear-gradient(0deg,var(--bg) 0%,transparent 16%),
+  linear-gradient(84deg,var(--bg) 0%,var(--bg) 24%,color-mix(in srgb,var(--bg) 84%,transparent) 40%,color-mix(in srgb,var(--bg) 30%,transparent) 56%,transparent 70%)}
+.page{position:relative;z-index:1}
+.nav{height:var(--nav-h);display:flex;align-items:center;gap:28px;color:var(--ink)}
+.logo img{height:26px;width:auto}
+.foot .logo img,:root[data-theme="dark"] .logo img{filter:brightness(0) invert(1)}
+.crumbs{display:flex;align-items:center;gap:8px;min-width:0;font-size:.875rem;color:var(--ink-2)}
+.crumbs a{white-space:nowrap;transition:color .2s}
+.crumbs a:hover{color:var(--accent)}
+.crumbs i{font-size:.75rem;opacity:.6}
+.crumbs [aria-current]{color:var(--ink);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* ---------- layout ---------- */
+.grid{display:grid;grid-template-columns:minmax(0,1fr);row-gap:0}
+.hero{color:var(--ink);min-height:calc(var(--hero-h) - var(--nav-h));display:flex;flex-direction:column;justify-content:flex-end;padding-block:40px 44px}
+.hero h1{font-size:clamp(2.2rem,1.2rem + 3.6vw,3.9rem);letter-spacing:-.035em;line-height:1.02;max-width:15ch}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero .where{display:flex;align-items:center;gap:8px;margin-top:18px;font-weight:500;color:var(--ink)}
+.hero .where i{font-size:1.1rem;color:var(--accent)}
+.hero .sub{margin-top:8px;font-size:1.125rem;color:var(--ink-2);max-width:44ch;text-wrap:balance}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:0 24px;border-radius:var(--pill);font-weight:600;font-size:1rem;transition:transform .25s var(--ease),background .25s,box-shadow .25s}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:linear-gradient(135deg,var(--brand-hi),var(--brand));color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 8px 18px -10px rgba(13,13,26,.4)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 12px 22px -10px rgba(13,13,26,.45)}
+.btn-primary i{font-size:1.15rem}
+.btn-ghost{background:var(--panel);color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--line)}
+.btn-ghost:hover{box-shadow:inset 0 0 0 1.5px var(--accent)}
+.stores{display:flex;align-items:center;gap:10px;margin-top:22px}
+.stores a{display:block;border-radius:8px;transition:transform .25s var(--ease)}
+.stores a:hover{transform:translateY(-1px)}
+.stores .as{height:40px;width:auto}
+.stores .gp{height:59px;width:auto;margin:-9.5px -10px}
+
+/* ---------- tee sheet rail ---------- */
+.rail{margin-top:-20px;margin-bottom:8px}
+.sheet{background:var(--panel);border-radius:var(--r-l);box-shadow:var(--shadow);display:flex;flex-direction:column;overflow:hidden}
+.sheet-head{padding:22px 22px 16px}
+.sheet-head h2{font-size:1.375rem;letter-spacing:-.02em}
+.sheet-head p{margin-top:6px;font-size:.9375rem;color:var(--ink-2)}
+.days{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:16px}
+.day{display:flex;flex-direction:column;align-items:center;gap:1px;padding:9px 4px 10px;border-radius:var(--r-m);background:var(--tint);line-height:1.25;transition:background .2s,color .2s,transform .25s var(--ease)}
+.day:hover{background:var(--tint-2)}
+.day:active{transform:scale(.97)}
+.day .dow{font-size:.75rem;font-weight:600;color:var(--ink-3)}
+.day .md{font-family:var(--head);font-weight:700;font-size:1rem;letter-spacing:-.01em}
+.day .ct{font-size:.75rem;color:var(--ink-3)}
+.day i{font-size:1.25rem;color:var(--accent);margin:1px 0 2px}
+.day[aria-pressed="true"]{background:var(--brand);color:#fff}
+.day[aria-pressed="true"] .dow,.day[aria-pressed="true"] .ct{color:rgba(255,255,255,.78)}
+.day-more{position:relative}
+.day-more input{position:absolute;inset:0;opacity:0;pointer-events:none}
+.sheet-body{padding:4px 22px 20px;border-top:1px solid var(--line)}
+/* ribbon */
+.ribbon{padding-top:14px}
+.ribbon-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:.8125rem}
+.ribbon-top span:first-child{color:var(--ink-3);font-weight:600}
+.ribbon-read{font-weight:600;color:var(--ink)}
+.ribbon svg{display:block;width:100%;height:auto;margin-top:4px;cursor:pointer;touch-action:pan-y;overflow:visible}
+.rb-area{fill:var(--accent);opacity:.1}
+.rb-line{fill:none;stroke:var(--accent);stroke-width:1.75;stroke-linejoin:round;stroke-linecap:round}
+.rb-dot{fill:var(--panel);stroke:var(--accent);stroke-width:1.25;transition:opacity .25s}
+.rb-dot.off{opacity:.2}
+.rb-dot.low{stroke:var(--good);fill:var(--good)}
+.rb-tick{font:500 9.5px var(--body);fill:var(--ink-3)}
+.rb-base{stroke:var(--line);stroke-width:1}
+.rb-cur{opacity:0;transition:opacity .15s}
+.rb-cur.on{opacity:1}
+.rb-cur line{stroke:var(--ink-3);stroke-width:1;stroke-dasharray:2 3}
+.rb-cur circle{fill:var(--accent);stroke:var(--panel);stroke-width:2}
+/* filters */
+.filters{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;margin-top:16px}
+.frow{display:grid;gap:7px}
+.flabel{font-size:.8125rem;font-weight:600;color:var(--ink-3)}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:5px;min-height:36px;padding:0 11px;white-space:nowrap;border-radius:var(--pill);background:var(--tint);font-size:.875rem;font-weight:600;transition:background .2s,color .2s,transform .25s var(--ease)}
+.chip:hover{background:var(--tint-2)}
+.chip:active{transform:scale(.96)}
+.chip small{font-size:.75rem;font-weight:500;color:var(--ink-3)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.chip[aria-pressed="true"] small{color:inherit;opacity:.7}
+.chip.round{min-width:36px;padding:0 10px;justify-content:center}
+/* day summary + times */
+.dayline{margin-top:20px}
+.dayline h3{font-size:1.125rem;letter-spacing:-.015em}
+.daysum{margin-top:16px;font-size:.875rem;line-height:1.55;color:var(--ink-2)}.daysum:empty{display:none}
+.times{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:14px}
+.tt{position:relative;display:grid;grid-template-columns:1fr auto;gap:2px 8px;align-items:baseline;padding:12px 14px 11px;border-radius:var(--r-m);background:var(--tint);transition:background .2s,color .2s,transform .3s var(--ease),box-shadow .3s}
+.tt-time{font-family:var(--head);font-weight:700;font-size:1.25rem;letter-spacing:-.02em;line-height:1.15}
+.tt-time small{font:600 .6875rem var(--body);letter-spacing:.02em;margin-left:3px;color:var(--ink-3)}
+.tt-price{font-weight:600;font-size:.9375rem}
+.tt-open{display:flex;align-items:center;gap:6px;font-size:.8125rem;color:var(--ink-2);white-space:nowrap}
+.tt-open.few{color:var(--warn);font-weight:600}
+.dots{display:inline-flex;gap:2.5px}
+.dots b{width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.22}
+.dots b.on{opacity:.95;background:var(--accent)}
+.tt-tag{justify-self:end;font-size:.6875rem;font-weight:700;color:var(--good);background:var(--good-bg);padding:1px 7px;border-radius:var(--pill)}
+.tt-go{justify-self:end;font-size:.9rem;opacity:0;transform:translate(-4px,4px);transition:opacity .2s,transform .3s var(--ease)}
+.tt:hover,.tt:focus-visible,.tt.hot{background:var(--brand);color:#fff;transform:translateY(-1px);box-shadow:0 8px 16px -10px rgba(13,13,26,.5)}
+.tt:hover :is(.tt-time small,.tt-open),.tt:focus-visible :is(.tt-time small,.tt-open),.tt.hot :is(.tt-time small,.tt-open){color:rgba(255,255,255,.8)}
+.tt:hover .dots b.on,.tt:focus-visible .dots b.on,.tt.hot .dots b.on{background:#fff}
+.tt:hover .tt-go,.tt:focus-visible .tt-go,.tt.hot .tt-go{opacity:1;transform:none}
+.tt:hover .tt-tag,.tt:focus-visible .tt-tag,.tt.hot .tt-tag{display:none}
+.tt:active{transform:scale(.98)}
+.more{width:100%;min-height:46px;margin-top:10px;border-radius:var(--pill);box-shadow:inset 0 0 0 1.5px var(--line);font-weight:600;font-size:.9375rem;color:var(--accent);display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s}
+.more:hover{background:var(--tint)}
+.empty{margin-top:14px;padding:22px 18px;border-radius:var(--r-m);background:var(--tint);text-align:center}
+.empty i{font-size:1.75rem;color:var(--accent)}
+.empty p{margin-top:6px;font-size:.9375rem;color:var(--ink-2)}
+.empty .btn{min-height:44px;margin-top:14px;font-size:.9375rem}
+.fine{margin-top:8px;font-size:.8125rem;line-height:1.5;color:var(--ink-3)}
+
+/* ---------- story column ---------- */
+.story{padding-block:36px 8px;display:grid;gap:64px}
+.story h2{font-size:clamp(1.6rem,1.2rem + 1.2vw,2.1rem)}
+/* ask bob */
+.ask{position:relative;border-radius:var(--r-l);padding:28px 22px 26px;background:linear-gradient(150deg,#3A12AE 0%,#2A0C86 55%,#1C0A5C 100%);color:#fff;overflow:hidden;isolation:isolate}
+.ask::before{content:"";position:absolute;z-index:-1;right:-70px;top:-70px;width:300px;height:300px;border-radius:50%;background:radial-gradient(closest-side,rgba(125,240,175,.2),transparent)}
+.ask-head{display:flex;align-items:center;gap:14px}
+.bob{flex:none;width:48px;height:48px;border-radius:15px;background:#fff;display:grid;place-items:center;box-shadow:0 8px 18px -8px rgba(0,0,0,.5)}
+.bob span{display:block;width:26px;height:29px;overflow:hidden}
+.bob img{height:29px;width:auto;max-width:none}
+.ask h2{color:#fff}
+.prompts{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.prompt{display:inline-flex;align-items:center;gap:10px;padding:12px 16px 12px 18px;border-radius:20px 20px 6px 20px;background:rgba(255,255,255,.1);box-shadow:inset 0 0 0 1px rgba(255,255,255,.16);font-size:.9375rem;line-height:1.4;transition:background .25s,transform .3s var(--ease),color .25s}
+.prompt i{flex:none;font-size:1rem;color:var(--mint);transition:transform .3s var(--ease)}
+.prompt:hover{background:#fff;color:var(--brand-deep);transform:translateY(-2px)}
+.prompt:hover i{color:var(--brand);transform:translate(2px,-2px)}
+.ask .stores{margin-top:24px}
+/* about */
+.about .lead{margin-top:16px;font-size:1.125rem;line-height:1.65;color:var(--ink-2);max-width:62ch}
+.facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 24px;margin-top:30px;padding-top:28px;border-top:1px solid var(--line)}
+.facts dt{font-size:.8125rem;font-weight:600;color:var(--ink-3)}
+.facts dd{margin-top:3px;font-weight:500;line-height:1.45}
+.facts a{color:var(--accent);text-decoration:underline;text-decoration-color:color-mix(in srgb,var(--accent) 35%,transparent);text-underline-offset:3px;transition:text-decoration-color .2s}
+.facts a:hover{text-decoration-color:var(--accent)}
+.facts .wide{grid-column:1/-1}
+.btn-line{margin-top:28px;min-height:48px;background:var(--panel);color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--line)}
+.btn-line i{color:var(--accent);font-size:1.1rem}
+.btn-line:hover{box-shadow:inset 0 0 0 1.5px var(--accent)}
+/* on site + policies */
+.duo{display:grid;gap:48px}
+.duo h2{font-size:1.5rem}
+.amen{display:grid;gap:4px;margin-top:18px}
+.amen li{display:flex;align-items:center;gap:14px;padding:7px 0;font-weight:500}
+.amen i{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:1.25rem;background:var(--tint);color:var(--accent)}
+.rules{margin-top:18px;padding:22px;border-radius:var(--r-l);background:var(--tint);display:grid;gap:16px}
+.rules li{display:grid;grid-template-columns:22px 1fr;gap:12px;line-height:1.5;color:var(--ink-2)}
+.rules i{font-size:1.2rem;color:var(--accent);margin-top:2px}
+
+/* ---------- nearby ---------- */
+.nearby{padding-block:72px 80px}
+.nearby h2{font-size:clamp(1.6rem,1.2rem + 1.2vw,2.1rem)}
+.near-grid{display:grid;gap:14px;margin-top:26px}
+.near{display:grid;grid-template-columns:116px 1fr;gap:16px;align-items:center;border-radius:var(--r-l)}
+.near .ph{border-radius:var(--r-m);overflow:hidden;aspect-ratio:1;background:var(--tint)}
+.near img{width:100%;height:100%;object-fit:cover;transition:transform .9s var(--ease)}
+.near:hover img{transform:scale(1.05)}
+.near h3{font-size:1.125rem;letter-spacing:-.015em;transition:color .2s}
+.near:hover h3{color:var(--accent)}
+.near p{margin-top:5px;font-size:.9375rem;color:var(--ink-2)}
+.all{display:inline-flex;align-items:center;gap:8px;margin-top:30px;font-weight:600;color:var(--accent)}
+.all i{transition:transform .3s var(--ease)}
+.all:hover i{transform:translateX(4px)}
+
+/* ---------- footer ---------- */
+.foot{background:var(--night);color:rgba(255,255,255,.66);padding-block:44px 120px;font-size:.9375rem}
+.foot .shell{display:grid;gap:22px}
+.foot .logo img{height:24px}
+.foot p{max-width:62ch}
+.foot nav{display:flex;flex-wrap:wrap;gap:8px 26px}
+.foot nav a{color:rgba(255,255,255,.86);text-decoration:underline;text-decoration-color:rgba(255,255,255,.3);text-underline-offset:3px}
+.foot nav a:hover{text-decoration-color:#fff}
+
+/* ---------- mobile dock ---------- */
+.dock{position:fixed;z-index:20;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 10px 10px 18px;border-radius:var(--pill);background:var(--night);color:#fff;box-shadow:0 16px 40px -12px rgba(7,7,15,.6),inset 0 0 0 1px rgba(255,255,255,.12);transform:translateY(140%);transition:transform .5s var(--ease)}
+.dock.show{transform:none}
+.dock div{min-width:0;line-height:1.25}
+.dock strong{display:block;font-family:var(--head);font-size:.9375rem;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dock span{font-size:.8125rem;color:rgba(255,255,255,.7)}
+.dock .btn{min-height:44px;padding:0 18px;font-size:.9375rem;white-space:nowrap}
+
+/* ---------- desktop ---------- */
+@media (min-width:640px){
+  .near-grid{grid-template-columns:1.45fr 1fr 1fr;gap:20px}
+  .near{grid-template-columns:1fr;gap:14px;align-items:start}
+  .near .ph{aspect-ratio:auto;height:230px;border-radius:var(--r-l)}
+  .facts{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .facts .wide{grid-column:auto}
+  .duo{grid-template-columns:1fr 1fr;gap:40px}
+  .ask{padding:36px 34px 34px}
+}
+@media (max-width:1023.98px){
+  .backdrop{display:none}
+  .nav{position:relative;z-index:2}
+  .hero{min-height:0;margin-top:calc(-1 * var(--nav-h));margin-inline:-20px;padding:calc(var(--nav-h) + 150px) 20px 52px;background:
+    linear-gradient(180deg,color-mix(in srgb,var(--bg) 88%,transparent) 0%,color-mix(in srgb,var(--bg) 20%,transparent) 20%,color-mix(in srgb,var(--bg) 20%,transparent) 34%,var(--bg) 60%),
+    url("https://storage.googleapis.com/courserev-cdn/course/org-banner-1778849042200.jpeg") 62% 0/auto 62% no-repeat,var(--bg)}
+  .crumbs a:first-of-type,.crumbs a:first-of-type + i{display:none}
+}
+@media (min-width:768px) and (max-width:1023.98px){.hero{margin-inline:-32px;padding-inline:32px;background-size:auto,cover,auto}}
+@media (max-width:479.98px){
+  .cta{flex-direction:column}
+  .cta .btn{width:100%;padding-inline:12px;text-align:center;font-size:.9375rem}
+  .cta .btn i{display:none}
+  #tod{display:grid;grid-template-columns:1fr 1fr}
+  #tod .chip{justify-content:center}
+}
+@media (min-width:1024px){
+  .grid{grid-template-columns:minmax(0,1fr) var(--rail-w);column-gap:clamp(36px,5vw,76px);align-items:start}
+  .hero{grid-column:1;grid-row:1;padding-bottom:56px}
+  .story{grid-column:1;grid-row:2;padding-top:64px;gap:80px}
+  .rail{grid-column:2;grid-row:1/span 2;position:sticky;top:20px;margin:14px 0 0;align-self:start}
+  .sheet{max-height:calc(100dvh - var(--nav-h) - 34px)}
+  .sheet-body{overflow-y:auto;overscroll-behavior:auto;scrollbar-width:thin;scrollbar-color:var(--tint-2) transparent}
+  .sheet-body::-webkit-scrollbar{width:8px}
+  .sheet-body::-webkit-scrollbar-thumb{background:var(--tint-2);border-radius:8px}
+  .dock{display:none}
+  .foot{padding-bottom:48px}
+}
+
+/* ---------- motion ---------- */
+@media (prefers-reduced-motion:no-preference){
+  .backdrop img{animation:settle 1.8s var(--ease) both}
+  .hero > *{animation:rise .9s var(--ease) both}
+  .hero > :nth-child(2){animation-delay:.07s}.hero > :nth-child(3){animation-delay:.13s}
+  .hero > :nth-child(4){animation-delay:.2s}.hero > :nth-child(5){animation-delay:.27s}
+  .sheet{animation:rise 1s .15s var(--ease) both}
+  .tt{animation:pop .45s var(--ease) both;animation-delay:calc(var(--i,0) * 22ms)}
+  .rb-line{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1.1s .1s var(--ease) forwards}
+  .rb-area{animation:fade .8s .5s both}
+  @keyframes settle{from{transform:scale(1.07)}to{transform:none}}
+  @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+  @keyframes pop{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:none}}
+  @keyframes draw{to{stroke-dashoffset:0}}
+  @keyframes fade{from{opacity:0}to{opacity:.1}}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{transition-duration:.01ms !important}
+}
+</style>
+</head>
+<body>
+
+<div class="backdrop" aria-hidden="true">
+  <img src="https://storage.googleapis.com/courserev-cdn/course/org-banner-1778849042200.jpeg" alt="" width="1280" height="550" fetchpriority="high">
+</div>
+
+<div class="page">
+  <header class="shell nav">
+    <a class="logo" href="/" aria-label="teemeup home"><img src="https://www.teemeup.ai/assets/teemeupai_logo.svg" alt="teemeup" width="114" height="26"></a>
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/courses">Courses</a><i class="ph ph-caret-right" aria-hidden="true"></i>
+      <a href="/courses/us/nc">North Carolina</a><i class="ph ph-caret-right" aria-hidden="true"></i>
+      <span aria-current="page">Highland Creek Golf Club</span>
+    </nav>
+  </header>
+
+  <main>
+    <div class="shell grid">
+
+      <section class="hero">
+        <h1>Book Highland Creek Golf Club tee times <em>with Bob</em></h1>
+        <p class="where"><i class="ph ph-map-pin" aria-hidden="true"></i>Tee times · Charlotte, NC</p>
+        <p class="sub">Book your next round with Bob, the AI that finds your tee time.</p>
+        <div class="cta">
+          <a class="btn btn-primary" data-ask="Find me a tee time at Highland Creek Golf Club" href="#"><i class="ph ph-chat-circle-dots" aria-hidden="true"></i>Ask Bob about Highland Creek Golf Club</a>
+          <a class="btn btn-ghost" href="#times">See open tee times</a>
+        </div>
+        <div class="stores">
+          <a href="https://apps.apple.com/us/app/teemeup-golf-tee-times/id6763700956"><img class="as" src="https://www.teemeup.ai/assets/app-store-badge.svg" alt="Download on the App Store" width="120" height="40"></a>
+          <a href="https://play.google.com/store/apps/details?id=com.teemeupai"><img class="gp" src="https://www.teemeup.ai/assets/google-play-badge.png" alt="Get it on Google Play" width="152" height="59"></a>
+        </div>
+      </section>
+
+      <aside class="rail" id="times" aria-labelledby="times-h">
+        <div class="sheet">
+          <div class="sheet-head">
+            <h2 id="times-h">Open tee times at Highland Creek Golf Club</h2>
+            <p>Tap a time to book it with Bob. Prices are per player.</p>
+            <div class="days" id="days" role="group" aria-label="Day"></div>
+          </div>
+          <div class="sheet-body" id="sheet-body">
+            <div class="ribbon" id="ribbon">
+              <div class="ribbon-top"><span>Price through the day</span><span class="ribbon-read num" id="read"></span></div>
+              <svg id="rb" viewBox="0 0 360 92" aria-hidden="true"></svg>
+            </div>
+            <div class="filters" id="filters">
+              <div class="frow"><span class="flabel" id="l-tod">Time of day</span><div class="seg" id="tod" role="group" aria-labelledby="l-tod"></div></div>
+              <div class="frow"><span class="flabel" id="l-pl">Players</span><div class="seg" id="players" role="group" aria-labelledby="l-pl"></div></div>
+            </div>
+            <div class="dayline">
+              <h3 id="day-h" aria-live="polite"></h3>
+            </div>
+            <div id="list"></div>
+            <p class="daysum" id="day-p"></p>
+            <p class="fine">Times are local to the course (ET). Updated Nov 3, 2026; availability changes.</p>
+          </div>
+        </div>
+      </aside>
+
+      <div class="story">
+        <section class="ask on-dark" aria-labelledby="ask-h">
+          <div class="ask-head">
+            <div class="bob" aria-hidden="true"><span><img src="https://www.teemeup.ai/assets/teemeupai_logo.svg" alt=""></span></div>
+            <h2 id="ask-h">Try asking Bob</h2>
+          </div>
+          <div class="prompts" id="prompts"></div>
+          <div class="stores">
+            <a href="https://apps.apple.com/us/app/teemeup-golf-tee-times/id6763700956"><img class="as" src="https://www.teemeup.ai/assets/app-store-badge.svg" alt="Download on the App Store" width="120" height="40" loading="lazy"></a>
+            <a href="https://play.google.com/store/apps/details?id=com.teemeupai"><img class="gp" src="https://www.teemeup.ai/assets/google-play-badge.png" alt="Get it on Google Play" width="152" height="59" loading="lazy"></a>
+          </div>
+        </section>
+
+        <section class="about" aria-labelledby="about-h">
+          <h2 id="about-h">About Highland Creek Golf Club</h2>
+          <p class="lead">Highland Creek is an 18-hole championship course in Charlotte, North Carolina designed by Clifton, Ezell and Clifton. It has Bermuda fairways, more than 65 bunkers and water in play on 11 holes, and the clubhouse has a taproom and a beer garden.</p>
+          <dl class="facts">
+            <div class="wide"><dt>Address</dt><dd>7101 Highland Creek Parkway, Charlotte, NC 28269</dd></div>
+            <div><dt>Phone</dt><dd><a class="num" href="tel:+17048759000">(704) 875-9000</a></dd></div>
+            <div><dt>Holes</dt><dd>18 · par 72</dd></div>
+            <div><dt>Architect</dt><dd>Clifton, Ezell and Clifton</dd></div>
+            <div><dt>Tees</dt><dd class="num">5,080–7,000 yards</dd></div>
+            <div><dt>Club website</dt><dd><a href="https://highlandcreekgolfclub.com/">highlandcreekgolfclub.com</a></dd></div>
+          </dl>
+          <a class="btn btn-line" href="https://www.google.com/maps/search/?api=1&query=Highland%20Creek%20Golf%20Club%207101%20Highland%20Creek%20Parkway%20Charlotte%20nc"><i class="ph ph-navigation-arrow" aria-hidden="true"></i>Get directions</a>
+        </section>
+
+        <div class="duo">
+          <section aria-labelledby="site-h">
+            <h2 id="site-h">What is on site</h2>
+            <ul class="amen">
+              <li><i class="ph ph-golf" aria-hidden="true"></i>Driving range</li>
+              <li><i class="ph ph-flag-pennant" aria-hidden="true"></i>Putting green</li>
+              <li><i class="ph ph-target" aria-hidden="true"></i>Chipping green and practice bunker</li>
+              <li><i class="ph ph-lockers" aria-hidden="true"></i>Clubhouse with locker rooms</li>
+              <li><i class="ph ph-beer-stein" aria-hidden="true"></i>Taproom and beer garden</li>
+              <li><i class="ph ph-chalkboard-teacher" aria-hidden="true"></i>Golf lessons</li>
+              <li><i class="ph ph-users-three" aria-hidden="true"></i>Outings and events</li>
+            </ul>
+          </section>
+          <section aria-labelledby="rules-h">
+            <h2 id="rules-h">Booking policies</h2>
+            <ul class="rules">
+              <li><i class="ph ph-clock-countdown" aria-hidden="true"></i>Changes must be made at least 24 hours before the tee time.</li>
+              <li><i class="ph ph-t-shirt" aria-hidden="true"></i>Proper golf attire is required.</li>
+              <li><i class="ph ph-users" aria-hidden="true"></i>Reservations for fewer than four golfers may be grouped with other golfers.</li>
+              <li><i class="ph ph-ticket" aria-hidden="true"></i>Up to 4 players per booking.</li>
+            </ul>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <section class="shell nearby" id="nearby" aria-labelledby="near-h">
+      <h2 id="near-h">Golf courses near Highland Creek Golf Club</h2>
+      <div class="near-grid">
+        <a class="near" href="/courses/us/nc/the-tradition-golf-club">
+          <div class="ph"><img src="https://storage.googleapis.com/courserev-cdn/course/org-banner-1784753398083.jpeg" alt="The Tradition Golf Club, Charlotte, North Carolina" loading="lazy"></div>
+          <div><h3>The Tradition Golf Club</h3><p>Charlotte, NC · 2.2 miles away</p></div>
+        </a>
+        <a class="near" href="/courses/us/nc/the-divide-golf-club">
+          <div class="ph"><img src="https://storage.googleapis.com/courserev-cdn/course/org-banner-1784748864666.jpeg" alt="The Divide Golf Club, Matthews, North Carolina" loading="lazy"></div>
+          <div><h3>The Divide Golf Club</h3><p>Matthews, NC · 19 miles away</p></div>
+        </a>
+        <a class="near" href="/courses/us/sc/waterford-golf-club">
+          <div class="ph"><img src="https://storage.googleapis.com/courserev-cdn/course/org-banner-1785906424754.jpeg" alt="Waterford Golf Club, Rock Hill, South Carolina" loading="lazy"></div>
+          <div><h3>Waterford Golf Club</h3><p>Rock Hill, SC · 32 miles away</p></div>
+        </a>
+      </div>
+      <a class="all" href="/courses/us/nc">See all golf courses in North Carolina<i class="ph ph-arrow-right" aria-hidden="true"></i></a>
+    </section>
+  </main>
+
+  <footer class="foot on-dark">
+    <div class="shell">
+      <a class="logo" href="/" aria-label="teemeup home"><img src="https://www.teemeup.ai/assets/teemeupai_logo.svg" alt="teemeup" width="106" height="24" loading="lazy"></a>
+      <p>Course details come from public sources and the booking system, and can change. Confirm with the club.</p>
+      <nav aria-label="Legal"><a href="#">Terms</a><a href="#">Privacy</a><a href="index.md">Markdown version</a></nav>
+    </div>
+  </footer>
+</div>
+
+<div class="dock on-dark" id="dock">
+  <div><strong id="dock-a"></strong><span class="num" id="dock-b"></span></div>
+  <a class="btn btn-primary" href="#times">See open tee times</a>
+</div>
+
+<script>
+(() => {
+  const COURSE = { name: 'Highland Creek Golf Club', slug: 'highland-creek-golf-club' };
+  const APP = 'https://web.teemeup.example/';
+  const RAW = {
+    '2026-11-04': '07:30|50.26|4,07:40|50.26|4,07:50|50.26|4,08:00|50.26|1,08:10|50.26|2,08:20|50.26|4,08:30|50.26|4,08:40|50.26|1,09:00|57.30|2,09:10|57.30|4,09:20|57.30|4,09:30|57.30|4,09:40|57.30|4,09:50|57.30|4,10:10|57.30|2,10:20|57.30|4,10:40|57.30|4,10:50|57.30|2,11:00|57.30|4,11:20|50.26|4,11:40|50.26|4,11:50|50.26|4,12:00|50.26|4,12:10|50.26|2,12:20|50.26|4,12:30|50.26|4,12:40|50.26|4,12:50|50.26|4,13:00|50.26|4,13:10|50.26|4,13:20|50.26|4,13:30|50.26|4,13:40|50.26|4,13:50|50.26|4,14:00|50.26|4,14:10|50.26|4,14:20|50.26|4,14:30|50.26|4,14:40|50.26|4,14:50|50.26|4,15:00|50.26|4,15:10|38.99|4,15:20|38.99|4,15:30|38.99|4',
+    '2026-11-05': '07:30|50.26|4,07:40|50.26|4,08:00|64.34|4,08:10|64.34|1,08:20|64.34|2,08:40|64.34|4,08:50|64.34|4,10:00|60.11|2,10:40|60.11|4,10:50|60.11|2,11:00|53.07|2,11:10|53.07|1,11:20|53.07|4,11:30|53.07|4,11:40|53.07|4,11:50|53.07|4,12:00|53.07|4,12:10|53.07|4,12:20|53.07|4,12:30|53.07|4,12:40|53.07|4,12:50|53.07|4,13:00|53.07|4,13:10|53.07|4,13:20|53.07|4,13:30|53.07|4,13:40|53.07|4,13:50|53.07|4,14:00|53.07|4,14:10|53.07|4,14:20|53.07|4,14:30|53.07|4,14:40|53.07|4,14:50|53.07|4,15:00|38.99|4,15:10|38.99|4,15:20|38.99|4,15:30|38.99|4',
+    '2026-11-06': '07:30|58.84|4,07:40|58.84|4,07:50|58.84|4,08:00|69.01|4,08:10|69.01|4,08:20|69.01|4,08:30|69.01|4,08:40|69.01|4,08:50|69.01|4,09:10|69.01|4,09:20|69.01|2,09:30|69.01|4,09:40|69.01|2,09:50|69.01|4,10:10|69.01|4,10:20|69.01|4,10:30|69.01|4,10:40|69.01|4,10:50|69.01|4,11:10|62.90|4,11:20|62.90|4,11:30|62.90|4,11:40|62.90|4,11:50|62.90|4,12:00|62.90|1,12:10|62.90|4,12:20|62.90|4,12:30|62.90|4,12:40|62.90|4,12:50|62.90|4,13:00|62.90|4,13:10|62.90|4,13:20|62.90|4,13:30|62.90|4,13:40|62.90|4,13:50|62.90|4,14:10|62.90|4,14:20|62.90|4,14:30|62.90|4,14:40|62.90|4,14:50|62.90|4,15:00|62.90|4,15:10|58.84|4,15:20|58.84|4,15:30|58.84|4'
+  };
+  const PROMPTS = [
+    'What tee times are open at Highland Creek Golf Club tomorrow?',
+    'What is the cheapest tee time at Highland Creek Golf Club this week?',
+    'Find a morning tee time for 4 players at Highland Creek Golf Club',
+    'Is there an afternoon tee time at Highland Creek Golf Club this weekend?',
+    'What will the weather be at Highland Creek Golf Club tomorrow?',
+    'What is the cancellation policy at Highland Creek Golf Club?'
+  ];
+  const TOD = [
+    { id: 'any', label: 'Any', test: () => true },
+    { id: 'am', label: 'Morning', test: m => m < 720 },
+    { id: 'mid', label: 'Midday', test: m => m >= 720 && m < 900 },
+    { id: 'pm', label: 'Afternoon', test: m => m >= 900 }
+  ];
+  const PAGE = 12;
+
+  const DATA = {};
+  for (const [d, s] of Object.entries(RAW)) {
+    DATA[d] = s.split(',').map(r => {
+      const [t, p, o] = r.split('|');
+      const [h, m] = t.split(':').map(Number);
+      return { t, min: h * 60 + m, price: +p, open: +o };
+    });
+  }
+  const all = Object.values(DATA).flat();
+  const X0 = Math.min(...all.map(x => x.min)), X1 = Math.max(...all.map(x => x.min));
+  const P0 = Math.min(...all.map(x => x.price)), P1 = Math.max(...all.map(x => x.price));
+
+  const $ = id => document.getElementById(id);
+  const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const date = d => new Date(d + 'T12:00:00Z');
+  const fmt = (d, o) => new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', ...o }).format(date(d));
+  const long = d => fmt(d, { weekday: 'long', month: 'long', day: 'numeric' });
+  const money = n => '$' + n.toFixed(2);
+  const clock = t => { let [h, m] = t.split(':').map(Number); const ap = h < 12 ? 'AM' : 'PM'; h = h % 12 || 12; return [h + ':' + String(m).padStart(2, '0'), ap]; };
+  const ask = q => APP + '?' + new URLSearchParams({ course: COURSE.slug, q });
+  const book = (d, x) => APP + '?' + new URLSearchParams({ course: COURSE.slug, q: `Book a tee time at ${COURSE.name} on ${long(d)} at ${clock(x.t).join(' ')}`, date: d, time: x.t });
+
+  const state = { day: Object.keys(DATA)[0], tod: 'any', players: 0, expanded: false, extra: null };
+  const items = () => DATA[state.day] || [];
+  const visible = () => { const f = TOD.find(t => t.id === state.tod).test; return items().filter(x => f(x.min) && x.open >= state.players); };
+
+  /* static links */
+  document.querySelectorAll('[data-ask]').forEach(a => a.href = ask(a.dataset.ask));
+  $('prompts').innerHTML = PROMPTS.map(q => `<a class="prompt" href="${esc(ask(q))}">${esc(q)}<i class="ph ph-arrow-up-right" aria-hidden="true"></i></a>`).join('');
+
+  function renderDays() {
+    const days = Object.keys(DATA).concat(state.extra && !DATA[state.extra] ? [state.extra] : []);
+    $('days').innerHTML = days.map(d => `
+      <button class="day" type="button" data-day="${d}" aria-pressed="${d === state.day}">
+        <span class="dow">${fmt(d, { weekday: 'short' })}</span>
+        <span class="md">${fmt(d, { month: 'short', day: 'numeric' })}</span>
+        <span class="ct num">${DATA[d] ? DATA[d].length + ' times' : 'Ask Bob'}</span>
+      </button>`).slice(0, 3 + (days.length > 3 ? 0 : 0)).concat().join('') + `
+      <button class="day day-more" type="button" id="more-dates" aria-label="More dates, open calendar">
+        <i class="ph ph-calendar-dots" aria-hidden="true"></i><span class="md">More</span><span class="ct">Dates</span>
+        <input type="date" id="cal" tabindex="-1" aria-hidden="true" min="${Object.keys(DATA)[0]}">
+      </button>`;
+    if (days.length > 3) { /* keep four columns: the picked date replaces the furthest loaded day */
+      const btns = [...$('days').querySelectorAll('[data-day]')];
+      btns[2].remove();
+    }
+  }
+
+  function renderFilters() {
+    const its = items();
+    $('tod').innerHTML = TOD.map(t => `<button class="chip" type="button" data-tod="${t.id}" aria-pressed="${t.id === state.tod}">${t.label}<small class="num">${its.filter(x => t.test(x.min)).length}</small></button>`).join('');
+    $('players').innerHTML = [0, 1, 2, 3, 4].map(n => `<button class="chip round num" type="button" data-pl="${n}" aria-pressed="${n === state.players}"${n ? ` aria-label="${n} player${n > 1 ? 's' : ''}"` : ''}>${n || 'Any'}</button>`).join('');
+  }
+
+  const RB = { w: 360, h: 92, l: 3, r: 3, t: 12, b: 20 };
+  let Y0 = P0, Y1 = P1;
+  const rx = m => RB.l + (m - X0) / (X1 - X0) * (RB.w - RB.l - RB.r);
+  const ry = p => RB.t + (1 - (p - Y0) / (Y1 - Y0)) * (RB.h - RB.t - RB.b - 8);
+  function renderRibbon() {
+    const its = items(), vis = new Set(visible());
+    $('ribbon').hidden = !its.length;
+    if (!its.length) return;
+    const lo = Math.min(...its.map(x => x.price)), hi = Math.max(...its.map(x => x.price));
+    Y0 = lo; Y1 = hi > lo ? hi : lo + 1;
+    let d = `M${rx(its[0].min).toFixed(1)} ${ry(its[0].price).toFixed(1)}`;
+    for (let i = 1; i < its.length; i++) d += `H${rx(its[i].min).toFixed(1)}V${ry(its[i].price).toFixed(1)}`;
+    const base = RB.h - RB.b + 4;
+    const ticks = [480, 600, 720, 840].map(m => `<text class="rb-tick" x="${rx(m)}" y="${RB.h - 3}" text-anchor="middle">${clock(String(m / 60).padStart(2, '0') + ':00')[0].replace(':00', '')} ${m < 720 ? 'AM' : 'PM'}</text>`).join('');
+    $('rb').innerHTML = `
+      <line class="rb-base" x1="0" x2="${RB.w}" y1="${base}" y2="${base}"/>
+      <path class="rb-area" d="${d}V${base}H${rx(its[0].min).toFixed(1)}Z"/>
+      <path class="rb-line" pathLength="1" d="${d}"/>
+      ${its.map(x => `<circle class="rb-dot${vis.has(x) ? '' : ' off'}${x.price === lo ? ' low' : ''}" cx="${rx(x.min).toFixed(1)}" cy="${ry(x.price).toFixed(1)}" r="2.1"/>`).join('')}
+      ${ticks}
+      <g class="rb-cur" id="cur"><line y1="${RB.t - 6}" y2="${base}"/><circle r="4.5"/></g>`;
+    state.range = lo === hi ? money(lo) : `${money(lo)} to ${money(hi)}`;
+    $('read').textContent = state.range;
+  }
+
+  function setHot(x) {
+    const cur = $('cur');
+    document.querySelectorAll('.tt.hot').forEach(e => e.classList.remove('hot'));
+    if (!x) { cur && cur.classList.remove('on'); $('read').textContent = state.range || ''; return; }
+    if (cur) {
+      cur.classList.add('on');
+      cur.querySelector('line').setAttribute('x1', rx(x.min)); cur.querySelector('line').setAttribute('x2', rx(x.min));
+      cur.querySelector('circle').setAttribute('cx', rx(x.min)); cur.querySelector('circle').setAttribute('cy', ry(x.price));
+    }
+    $('read').textContent = `${clock(x.t).join(' ')}  ${money(x.price)}  ${x.open} open`;
+    return document.querySelector(`.tt[data-t="${x.t}"]`);
+  }
+
+  function renderList() {
+    const d = state.day, its = items(), vis = visible();
+    $('day-h').textContent = long(d);
+    if (!its.length) {
+      $('day-p').textContent = '';
+      $('filters').hidden = true;
+      $('list').innerHTML = `<div class="empty"><i class="ph ph-calendar-dots" aria-hidden="true"></i><p>Times for ${long(d)} are not loaded on this page yet. Bob can check that date for you.</p><a class="btn btn-primary" href="${esc(ask(`What tee times are open at ${COURSE.name} on ${long(d)}?`))}">Ask Bob about ${fmt(d, { month: 'short', day: 'numeric' })}</a></div>`;
+      return;
+    }
+    $('filters').hidden = false;
+    const lo = Math.min(...its.map(x => x.price)), hi = Math.max(...its.map(x => x.price));
+    $('day-p').textContent = `On ${long(d)}, ${its.length} tee times are open at ${COURSE.name}, from ${money(lo)} to ${money(hi)} per player. The first is at ${clock(its[0].t).join(' ')}.`;
+    if (!vis.length) {
+      $('list').innerHTML = `<div class="empty"><i class="ph ph-flag-pennant" aria-hidden="true"></i><p>No open times match those filters on ${fmt(d, { weekday: 'long' })}.</p><button class="btn btn-primary" type="button" id="clear">Show all ${its.length} times</button></div>`;
+      return;
+    }
+    const shown = state.expanded ? vis : vis.slice(0, PAGE);
+    $('list').innerHTML = `<div class="times">${shown.map((x, i) => {
+      const [hm, ap] = clock(x.t);
+      return `<a class="tt num" style="--i:${Math.min(i, 14)}" data-t="${x.t}" href="${esc(book(d, x))}" aria-label="${hm} ${ap}, ${money(x.price)} per player, ${x.open} open. Book with Bob">
+        <span class="tt-time">${hm}<small>${ap}</small></span>
+        <span class="tt-price">${money(x.price)}</span>
+        <span class="tt-open${x.open === 1 ? ' few' : ''}"><span class="dots" aria-hidden="true">${[1, 2, 3, 4].map(n => `<b${n <= x.open ? ' class="on"' : ''}></b>`).join('')}</span>${x.open} open</span>
+        ${x.price === lo && lo !== hi ? '<span class="tt-tag">Lowest</span>' : ''}<i class="ph ph-arrow-up-right tt-go" aria-hidden="true"></i>
+      </a>`;
+    }).join('')}</div>${vis.length > PAGE && !state.expanded ? `<button class="more" type="button" id="showall">Show all ${vis.length} times<i class="ph ph-caret-down" aria-hidden="true"></i></button>` : ''}`;
+  }
+
+  function renderDock() {
+    const its = items();
+    $('dock-a').textContent = fmt(state.day, { weekday: 'short', month: 'short', day: 'numeric' });
+    $('dock-b').textContent = its.length ? `${its.length} open from ${money(Math.min(...its.map(x => x.price)))}` : 'Ask Bob for times';
+  }
+
+  function render(what) {
+    if (what === 'all') { renderDays(); renderDock(); }
+    renderFilters(); renderRibbon(); renderList();
+  }
+
+  /* events */
+  $('days').addEventListener('click', e => {
+    const b = e.target.closest('.day'); if (!b) return;
+    if (b.id === 'more-dates') { const c = $('cal'); try { c.showPicker(); } catch { c.style.pointerEvents = 'auto'; c.focus(); c.click(); } return; }
+    state.day = b.dataset.day; state.expanded = false; state.tod = 'any'; render('all');
+  });
+  $('days').addEventListener('change', e => {
+    if (e.target.id !== 'cal' || !e.target.value) return;
+    state.day = e.target.value; state.extra = DATA[state.day] ? null : state.day; state.expanded = false; state.tod = 'any'; render('all');
+  });
+  $('filters').addEventListener('click', e => {
+    const b = e.target.closest('.chip'); if (!b) return;
+    if (b.dataset.tod) state.tod = b.dataset.tod; else state.players = +b.dataset.pl;
+    render();
+  });
+  $('list').addEventListener('click', e => {
+    if (e.target.closest('#showall')) { state.expanded = true; renderList(); const n = document.querySelectorAll('.tt')[PAGE]; n && n.focus({ preventScroll: true }); }
+    if (e.target.closest('#clear')) { state.tod = 'any'; state.players = 0; render(); }
+  });
+  const hover = e => { const a = e.target.closest && e.target.closest('.tt'); if (a) setHot(items().find(x => x.t === a.dataset.t)); };
+  $('list').addEventListener('pointerover', hover);
+  $('list').addEventListener('focusin', hover);
+  $('list').addEventListener('pointerleave', () => setHot(null));
+  $('list').addEventListener('focusout', () => setHot(null));
+
+  const rb = $('rb');
+  const nearest = e => {
+    const r = rb.getBoundingClientRect(), x = (e.clientX - r.left) / r.width * RB.w, vis = visible();
+    return vis.reduce((a, b) => Math.abs(rx(b.min) - x) < Math.abs(rx(a.min) - x) ? b : a, vis[0]);
+  };
+  rb.addEventListener('pointermove', e => { const x = nearest(e); if (x) { const el = setHot(x); el && el.classList.add('hot'); } });
+  rb.addEventListener('pointerleave', () => setHot(null));
+  rb.addEventListener('click', e => { const x = nearest(e); if (x) location.href = book(state.day, x); });
+
+  /* mobile dock: show once the tee sheet has scrolled out of view */
+  const dock = $('dock');
+  new IntersectionObserver(([en]) => dock.classList.toggle('show', !en.isIntersecting), { threshold: 0 }).observe($('times'));
+
+  render('all');
+})();
+</script>
+</body>
+</html>
