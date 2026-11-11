@@ -42,7 +42,6 @@ export default async function RegionHub({ params }: Props) {
   const cities = [...r.cities].sort((a, b) => a.key.localeCompare(b.key));
   return (
     <HubPage
-      seed={`${country}-${region}`}
       gate={showGate ? hubGateText(r.courses.length) : null}
       crumbs={[{ name: "Courses", href: "/courses" }, { name: r.name, href: r.path }]}
       eyebrow={`Tee times · ${r.name}`}

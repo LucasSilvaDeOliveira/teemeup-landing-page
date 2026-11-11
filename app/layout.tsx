@@ -1,7 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import "@fontsource/space-grotesk/700.css";
 import "@fontsource/dm-sans/400.css";
+import "@fontsource/dm-sans/500.css";
 import "@fontsource/dm-sans/600.css";
+import "@fontsource/dm-sans/700.css";
 import "./globals.css";
 import { APP, BRAND, siteUrl } from "@/lib/config";
 

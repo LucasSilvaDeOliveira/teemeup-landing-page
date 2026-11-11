@@ -2,7 +2,18 @@ import type { CourseData, TeeTimeDay } from "./course-data";
 import { chatLink, daySentence, formatTime, longDate, money, openSlots, parseDate, slotPrompt, summarizeDay } from "./derive";
 
 /** What the tee time list shows for one day. Built on the server, for the page and for the date picker API. */
-export type SlotView = { time: string; label: string; price: string; spots: number; href: string };
+export type SlotView = {
+  /** "HH:mm" 24h, local to the course. */
+  time: string;
+  /** "7:30 AM" */
+  label: string;
+  /** "$50.26", or "Price on request". */
+  price: string;
+  /** Price per player in USD, for the price chart and the "Lowest" tag. */
+  priceValue: number | null;
+  spots: number;
+  href: string;
+};
 export type DayView = { date: string; tab: string; heading: string; sentence: string; asOf: string; slots: SlotView[] };
 
 /** "2026-10-28" or an ISO timestamp -> "Oct 28, 2026". */
@@ -47,6 +58,7 @@ export function toDayView(c: CourseData, day: TeeTimeDay): DayView {
         time: slot.time,
         label: formatTime(slot.time),
         price: slot.priceUsd !== null ? money(slot.priceUsd) : "Price on request",
+        priceValue: slot.priceUsd,
         spots: slot.spots,
         href: chatLink(c, { q: slotPrompt(name, day.date, slot), date: day.date, time: slot.time }),
       })),

@@ -25,7 +25,6 @@ export default async function CoursesHub() {
   const courses = await publishedCourses();
   return (
     <HubPage
-      seed="courses"
       gate={showGate ? hubGateText(courses.length) : null}
       crumbs={[{ name: "Courses", href: "/courses" }]}
       eyebrow="Tee times"

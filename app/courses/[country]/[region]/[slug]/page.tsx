@@ -3,18 +3,19 @@ import Image from "next/image";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CourseCard } from "@/components/CourseCard";
-import { Qr } from "@/components/Qr";
+import { Icon, type IconName } from "@/components/Icon";
+import { AskBob, Site, SiteFooter, SiteHeader, Stores } from "@/components/SiteChrome";
 import { TeeTimeBrowser } from "@/components/TeeTimeBrowser";
 import { addDays, todayAt, toDayView, tzLabel, type DayView } from "@/lib/day-view";
 import { BRAND, absoluteUrl, coursePath, indexingAllowed, showGate } from "@/lib/config";
 import { indexabilityProblems } from "@/lib/course-data";
-import { contourPaths } from "@/lib/contours";
 import { getCourse, getNearby, listCourses } from "@/lib/courses";
 import { askBobPrompts, chatLink, formatPhone, metaDescription, milesBetween, metaTitle, openSlots } from "@/lib/derive";
 import { courseJsonLd, jsonLdString } from "@/lib/seo";
 import { courseCard } from "@/lib/hub";
 import { regionName, regionPath } from "@/lib/regions";
 import { resolveAccent } from "@/lib/theme";
+import { POLICY_ICONS, amenityIcon } from "@/lib/icons";
 
 // Tee times change during the day: regenerate the HTML at most every 5 minutes.
 export const revalidate = 300;
@@ -55,11 +56,14 @@ export default async function CoursePage({ params }: Props) {
   const f = c.facts;
   const theme = resolveAccent(f.themeColor);
   const problems = indexabilityProblems(c);
-  const prompts = askBobPrompts(c);
+  const prompts = askBobPrompts(c).map((q) => ({ q, href: chatLink(c, { q }) }));
   const days = c.ops.teeTimes.filter((d) => openSlots(d).length > 0);
   const p = c.ops.policies;
-  const policyLines = [p.cancellation, p.dressCode, p.carts, p.walking, p.groupingNote].filter(Boolean) as string[];
-  const rings = contourPaths(f.slug);
+  const policyLines = (["cancellation", "dressCode", "carts", "walking", "groupingNote"] as const)
+    .filter((k) => p[k])
+    .map((k): { icon: IconName; text: string } => ({ icon: POLICY_ICONS[k], text: p[k] as string }));
+  if (p.maxPlayers) policyLines.push({ icon: POLICY_ICONS.maxPlayers, text: `Up to ${p.maxPlayers} players per booking.` });
+  if (p.bookingWindowDays) policyLines.push({ icon: POLICY_ICONS.bookingWindowDays, text: `Tee times open ${p.bookingWindowDays} days ahead.` });
   const dayViews: DayView[] = days.map((day) => toDayView(c, day));
   const firstDate = todayAt(f.timeZone);
   const picker = {
@@ -75,156 +79,119 @@ export default async function CoursePage({ params }: Props) {
   const photo = f.photos[0] ?? null;
   const bobGeneral = chatLink(c, { q: `Find me a tee time at ${f.name}` });
   const yardRange = f.optional?.yardsMin && f.optional?.yardsMax ? { min: f.optional.yardsMin, max: f.optional.yardsMax } : null;
+  const place = `${f.city}, ${f.region.toUpperCase()}`;
+  const gate = showGate
+    ? `Publication gate: ${problems.length === 0 ? "indexable" : `noindex (${problems.join("; ")})`}${indexingAllowed ? "" : " · Site-wide noindex (no NEXT_PUBLIC_SITE_URL, or NEXT_PUBLIC_NOINDEX=1)"}`
+    : null;
+  // The club's color, if any, replaces the Teemeup purple (globals.css mixes the tints from it).
+  const style = f.themeColor ? ({ "--brand": theme.accent } as CSSProperties) : undefined;
 
   return (
-    <>
-      {showGate && (
-        <div className="gate">
-          Publication gate: {problems.length === 0 ? "indexable" : `noindex (${problems.join("; ")})`}
-          {!indexingAllowed && " · Site-wide noindex (no NEXT_PUBLIC_SITE_URL, or NEXT_PUBLIC_NOINDEX=1)"}
+    <Site gate={gate} className={photo ? "has-photo" : "no-photo"} style={style}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdString(courseJsonLd(c)) }} />
+      {photo && (
+        <div className="backdrop">
+          <Image src={photo.url} alt={photo.alt} fill priority sizes="100vw" />
         </div>
       )}
-      <div className="page" style={{ "--accent": theme.accent, "--accent-hover": theme.hover } as CSSProperties}>
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdString(courseJsonLd(c)) }} />
-        <div className="contours" aria-hidden="true">
-          <svg viewBox="-640 -520 1280 1040" preserveAspectRatio="xMidYMid slice">
-            {rings.map((d, i) => (
-              <path key={i} d={d} style={{ strokeOpacity: Math.max(0.1, 0.34 - i * 0.025) }} />
-            ))}
-          </svg>
-        </div>
+      <div className="page">
+        <SiteHeader
+          crumbs={[
+            { name: "Courses", href: "/courses" },
+            { name: regionName(f.country, f.region), href: regionPath(f.country, f.region) },
+            { name: f.name, href: coursePath(f) },
+          ]}
+        />
 
-        <div className="wrap">
-          <header className="top">
-            <a className="wordmark" href="/">teemeup</a>
-            <nav className="crumbs" aria-label="Breadcrumb">
-              <ol>
-                <li><a href="/courses">Courses</a></li>
-                <li><a href={regionPath(f.country, f.region)}>{regionName(f.country, f.region)}</a></li>
-                <li aria-current="page">{f.name}</li>
-              </ol>
-            </nav>
-          </header>
-
-          <main>
-            <section className="hero rise">
-              <p className="eyebrow">Tee times · {f.city}, {f.region.toUpperCase()}</p>
-              <div className="hero-grid">
-                <div>
-                  <h1>Book {f.name} tee times with Bob</h1>
-                  <p className="lead">{BRAND.tagline}</p>
-                  <div className="cta-row">
-                    <a className="btn primary" href={bobGeneral}>Ask Bob about {f.name}</a>
-                    <a className="btn ghost" href="#times">See open tee times</a>
-                  </div>
-                  <div className="stores stores-mobile" aria-label="Get the Teemeup app">
-                    <a className="store" href={c.teemeup.appStoreUrl} rel="noopener">App Store</a>
-                    <a className="store" href={c.teemeup.playStoreUrl} rel="noopener">Google Play</a>
-                  </div>
-                  {prompts.length > 0 && (
-                    <div className="prompts">
-                      <p className="label">Try asking Bob</p>
-                      {prompts.map((q, i) => (
-                        <a key={q} className="prompt" data-desktop-only={i >= 3 ? "" : undefined} href={chatLink(c, { q })}>“{q}”</a>
-                      ))}
-                    </div>
-                  )}
-                </div>
-                <aside className="app" aria-label="Get the Teemeup app">
-                  {c.teemeup.deepLinkUrl && (
-                    <figure className="qrcard">
-                      <Qr value={c.teemeup.deepLinkUrl} label={`QR code to open Teemeup at ${f.name}`} />
-                      <figcaption>Scan to open on your phone</figcaption>
-                    </figure>
-                  )}
-                  <div className="stores">
-                    <a className="store" href={c.teemeup.appStoreUrl} rel="noopener" target="_blank">App Store</a>
-                    <a className="store" href={c.teemeup.playStoreUrl} rel="noopener" target="_blank">Google Play</a>
-                  </div>
-                </aside>
+        <main>
+          <div className="shell grid">
+            <section className="hero">
+              <h1>Book {f.name} tee times <em>with Bob</em></h1>
+              <p className="where"><Icon name="map-pin" />Tee times · {place}</p>
+              <p className="sub">{BRAND.tagline}</p>
+              <div className="cta">
+                <a className="btn btn-primary" href={bobGeneral}><Icon name="chat-circle-dots" />Ask Bob about {f.name}</a>
+                {dayViews.length > 0 && <a className="btn btn-ghost" href="#times">See open tee times</a>}
               </div>
+              <Stores />
             </section>
 
             {dayViews.length > 0 && (
-              <section className="block" id="times">
-                <h2>Open tee times at {f.name}</h2>
+              <aside className="rail" id="times" aria-labelledby="times-h">
                 <TeeTimeBrowser name={f.name} days={dayViews} tz={tzLabel(f.timeZone)} picker={picker} />
-              </section>
+              </aside>
             )}
 
-            <section className="block">
-              {photo && (
-                <figure className="photo">
-                  <Image src={photo.url} alt={photo.alt} width={photo.width} height={photo.height} sizes="(min-width: 1152px) 1088px, calc(100vw - 40px)" />
-                </figure>
-              )}
-              <div className="cols">
-                <div>
-                  <h2>About {f.name}</h2>
-                  {f.description && <p className="sub">{f.description}</p>}
-                  <dl className="facts">
-                    <dt>Address</dt><dd>{f.address.street}, {f.city}, {f.region.toUpperCase()} {f.address.postalCode}</dd>
-                    {f.phone && (<><dt>Phone</dt><dd><a href={`tel:${f.phone}`}>{formatPhone(f.phone)}</a></dd></>)}
-                    <dt>Holes</dt><dd>{f.holes}{f.par ? ` · par ${f.par}` : ""}</dd>
-                    {f.designer && (<><dt>Architect</dt><dd>{f.designer}</dd></>)}
-                    {f.yearOpened && (<><dt>Opened</dt><dd>{f.yearOpened}</dd></>)}
-                    {yardRange && (<><dt>Tees</dt><dd>{yardRange.min.toLocaleString("en-US")}–{yardRange.max.toLocaleString("en-US")} yards</dd></>)}
-                    {f.website && (<><dt>Club website</dt><dd><a href={f.website} rel="noopener">{f.website.replace(/^https?:\/\//, "")}</a></dd></>)}
-                  </dl>
-                  <p className="asof"><a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${f.name} ${f.address.street} ${f.city} ${f.region}`)}`} rel="noopener">Get directions</a></p>
-                </div>
-                <div>
+            <div className="story">
+              {prompts.length > 0 && <AskBob prompts={prompts} />}
+
+              <section className="about" aria-labelledby="about-h">
+                <h2 id="about-h">About {f.name}</h2>
+                {f.description && <p className="lead">{f.description}</p>}
+                <dl className="facts">
+                  <div className="wide"><dt>Address</dt><dd>{f.address.street}, {place} {f.address.postalCode}</dd></div>
+                  {f.phone && <div><dt>Phone</dt><dd><a className="num" href={`tel:${f.phone}`}>{formatPhone(f.phone)}</a></dd></div>}
+                  <div><dt>Holes</dt><dd>{f.holes}{f.par ? ` · par ${f.par}` : ""}</dd></div>
+                  {f.designer && <div><dt>Architect</dt><dd>{f.designer}</dd></div>}
+                  {f.yearOpened && <div><dt>Opened</dt><dd>{f.yearOpened}</dd></div>}
+                  {yardRange && <div><dt>Tees</dt><dd className="num">{yardRange.min.toLocaleString("en-US")}–{yardRange.max.toLocaleString("en-US")} yards</dd></div>}
+                  {f.website && <div><dt>Club website</dt><dd><a href={f.website} rel="noopener">{f.website.replace(/^https?:\/\//, "").replace(/\/$/, "")}</a></dd></div>}
+                </dl>
+                <a className="btn btn-line" href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${f.name} ${f.address.street} ${f.city} ${f.region}`)}`} rel="noopener">
+                  <Icon name="navigation-arrow" />Get directions
+                </a>
+              </section>
+
+              {(f.amenities.length > 0 || policyLines.length > 0) && (
+                <div className="duo">
                   {f.amenities.length > 0 && (
-                    <>
-                      <h2>What is on site</h2>
-                      <ul className="plain">{f.amenities.map((a) => <li key={a}>{a}</li>)}</ul>
-                    </>
-                  )}
-                  {(policyLines.length > 0 || p.maxPlayers || p.bookingWindowDays) && (
-                    <div style={{ marginTop: f.amenities.length ? 28 : 0 }}>
-                      <h2>Booking policies</h2>
-                      <ul className="plain">
-                        {policyLines.map((l) => <li key={l}>{l}</li>)}
-                        {p.maxPlayers && <li>Up to {p.maxPlayers} players per booking.</li>}
-                        {p.bookingWindowDays && <li>Tee times open {p.bookingWindowDays} days ahead.</li>}
+                    <section aria-labelledby="site-h">
+                      <h2 id="site-h">What is on site</h2>
+                      <ul className="amen">
+                        {f.amenities.map((a) => <li key={a}><span className="badge"><Icon name={amenityIcon(a)} /></span>{a}</li>)}
                       </ul>
-                    </div>
+                    </section>
+                  )}
+                  {policyLines.length > 0 && (
+                    <section aria-labelledby="rules-h">
+                      <h2 id="rules-h">Booking policies</h2>
+                      <ul className="rules">
+                        {policyLines.map((l) => <li key={l.text}><Icon name={l.icon} />{l.text}</li>)}
+                      </ul>
+                    </section>
                   )}
                 </div>
-              </div>
-            </section>
+              )}
 
-            {c.ops.faq.length > 0 && (
-              <section className="block">
-                <h2>Questions golfers ask</h2>
-                {c.ops.faq.map((q) => (
-                  <div key={q.q} style={{ marginBottom: 14 }}>
-                    <p><b>{q.q}</b></p>
-                    <p className="sub">{q.a}</p>
+              {c.ops.faq.length > 0 && (
+                <section aria-labelledby="faq-h">
+                  <h2 id="faq-h">Questions golfers ask</h2>
+                  <div className="faq">
+                    {c.ops.faq.map((q) => (
+                      <div key={q.q}><h3>{q.q}</h3><p>{q.a}</p></div>
+                    ))}
                   </div>
-                ))}
-              </section>
-            )}
+                </section>
+              )}
+            </div>
+          </div>
 
-            {nearby.length > 0 && (
-              <section className="block" id="nearby">
-                <h2>Golf courses near {f.name}</h2>
-                <ul className="nearby">
-                  {nearby.map(({ n, miles }) => (
-                    <li key={n.facts.slug}><CourseCard card={courseCard(n, miles)} /></li>
-                  ))}
-                </ul>
-                <p className="asof"><a href={regionPath(f.country, f.region)}>See all golf courses in {regionName(f.country, f.region)}</a></p>
-              </section>
-            )}
-          </main>
+          {nearby.length > 0 && (
+            <section className="shell nearby" id="nearby" aria-labelledby="near-h">
+              <h2 id="near-h" className="section-h">Golf courses near {f.name}</h2>
+              <div className={`near-grid${nearby.length === 3 ? " feature" : ""}`}>
+                {nearby.map(({ n, miles }) => <CourseCard key={n.facts.slug} card={courseCard(n, miles)} />)}
+              </div>
+              <a className="all" href={regionPath(f.country, f.region)}>See all golf courses in {regionName(f.country, f.region)}<Icon name="arrow-right" /></a>
+            </section>
+          )}
+        </main>
 
-          <footer className="foot">
-            <p className="disclaimer">Course details come from public sources and the booking system, and can change. Confirm with the club.</p>
-            <p><a href="#">Terms</a> · <a href="#">Privacy</a> · <a href={`${coursePath({ country, region, slug })}/index.md`}>Markdown version</a></p>
-          </footer>
-        </div>
+        <SiteFooter
+          note="Course details come from public sources and the booking system, and can change. Confirm with the club."
+          links={[{ label: "Terms", href: "#" }, { label: "Privacy", href: "#" }, { label: "Markdown version", href: `${coursePath({ country, region, slug })}/index.md` }]}
+        />
       </div>
-    </>
+    </Site>
   );
 }
