@@ -291,6 +291,7 @@ h1, h2, h3, h4 { font-family: var(--head); font-weight: 700; letter-spacing: -0.
   .backdrop::after { background: linear-gradient(180deg, color-mix(in srgb, var(--bg) 88%, transparent) 0%, color-mix(in srgb, var(--bg) 20%, transparent) 26%, color-mix(in srgb, var(--bg) 20%, transparent) 46%, var(--bg) 96%); }
   .has-photo .hero { min-height: 0; padding-top: 150px; }
   .crumbs li:first-child:not(:last-child) { display: none; }
+  .crumbs li:first-child:not(:last-child) + li .sep { display: none; }
 }
 @media (max-width: 479.98px) {
   .cta { flex-direction: column; }
