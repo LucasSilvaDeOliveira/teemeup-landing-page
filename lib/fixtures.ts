@@ -55,7 +55,7 @@ export const highlandCreek: CourseData = {
     // Banner of the CourseRev v2 page (CourseRev CDN). Licensing for use on Teemeup is to be confirmed with the club.
     photos: [{ url: "https://storage.googleapis.com/courserev-cdn/course/org-banner-1778849042200.jpeg", alt: "Fairway and flagstick at Highland Creek Golf Club", width: 1280, height: 550 }],
     logoUrl: null,
-    themeColor: "#0B6B3A", // TODO: placeholder, confirm the club's color
+    themeColor: null, // TODO: the club's color, if Teemeup wants per-club colors (null keeps the Teemeup purple)
     optional: { yardsMin: 5080, yardsMax: 7000 },
   },
   ops: {

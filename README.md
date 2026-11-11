@@ -30,7 +30,7 @@ npm run build && npm start
 - App links: App Store and Google Play badges in the hero and in "Try asking Bob", and the Safari app banner on iPhone.
 - The course photo is the hero background (loaded first, served by `next/image`), and is also used for `og:image` and the JSON-LD.
 - Design: Javier Mula. Tokens and layout are in `app/globals.css`; icons are inline SVG from Phosphor (`components/Icon.tsx`), so no icon font is loaded. Shared header, footer, store badges and "Try asking Bob" are in `components/SiteChrome.tsx`.
-- Club colors: `facts.themeColor` replaces the Teemeup purple on that course page (Highland Creek shows a placeholder green); tints and the "Try asking Bob" gradient are mixed from it. On desktop the tee sheet stays in a column on the right; on phones a bar at the bottom brings the golfer back to it.
+- Club colors: `facts.themeColor` replaces the Teemeup purple on that course page (all example clubs use the purple; set a hex color on one to see it); tints and the "Try asking Bob" gradient are mixed from it. On desktop the tee sheet stays in a column on the right; on phones a bar at the bottom brings the golfer back to it.
 
 ## What the dev team connects
 
