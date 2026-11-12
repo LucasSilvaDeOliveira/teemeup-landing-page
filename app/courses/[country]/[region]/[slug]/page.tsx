@@ -113,7 +113,7 @@ export default async function CoursePage({ params }: Props) {
                 <a className="btn btn-primary" href={bobGeneral}><Icon name="chat-circle-dots" />Ask Bob about {f.name}</a>
                 {dayViews.length > 0 && <a className="btn btn-ghost" href="#times">See open tee times</a>}
               </div>
-              <Stores />
+              <Stores links={c.teemeup} />
             </section>
 
             {dayViews.length > 0 && (
@@ -123,7 +123,7 @@ export default async function CoursePage({ params }: Props) {
             )}
 
             <div className="story">
-              {prompts.length > 0 && <AskBob prompts={prompts} />}
+              {prompts.length > 0 && <AskBob prompts={prompts} links={c.teemeup} />}
 
               <section className="about" aria-labelledby="about-h">
                 <h2 id="about-h">About {f.name}</h2>

@@ -23,15 +23,17 @@ export function SiteHeader({ crumbs }: { crumbs: { name: string; href: string }[
   );
 }
 
-/** App Store and Google Play badges (official artwork, copied from teemeup.ai). */
-export function Stores({ lazy = false }: { lazy?: boolean }) {
+type StoreLinks = { appStoreUrl: string; playStoreUrl: string };
+
+/** App Store and Google Play badges (official artwork, copied from teemeup.ai). Course pages pass their own links. */
+export function Stores({ lazy = false, links = APP }: { lazy?: boolean; links?: StoreLinks }) {
   const loading = lazy ? "lazy" : undefined;
   return (
     <div className="stores">
-      <a href={APP.appStoreUrl} rel="noopener">
+      <a href={links.appStoreUrl} rel="noopener">
         <img className="as" src="/brand/app-store-badge.svg" alt="Download on the App Store" width={120} height={40} loading={loading} />
       </a>
-      <a href={APP.playStoreUrl} rel="noopener">
+      <a href={links.playStoreUrl} rel="noopener">
         <img className="gp" src="/brand/google-play-badge.png" alt="Get it on Google Play" width={152} height={59} loading={loading} />
       </a>
     </div>
@@ -42,7 +44,7 @@ export function Stores({ lazy = false }: { lazy?: boolean }) {
  * "Try asking Bob": example questions as links into the chat with Bob, plus the store badges.
  * Phones show the first three questions (`data-desktop-only` hides the rest below 768px).
  */
-export function AskBob({ prompts, className }: { prompts: { q: string; href: string }[]; className?: string }) {
+export function AskBob({ prompts, className, links }: { prompts: { q: string; href: string }[]; className?: string; links?: StoreLinks }) {
   return (
     <section className={`ask on-dark${className ? ` ${className}` : ""}`} aria-labelledby="ask-h">
       <div className="ask-head">
@@ -59,7 +61,7 @@ export function AskBob({ prompts, className }: { prompts: { q: string; href: str
           </a>
         ))}
       </div>
-      <Stores lazy />
+      <Stores lazy links={links} />
     </section>
   );
 }

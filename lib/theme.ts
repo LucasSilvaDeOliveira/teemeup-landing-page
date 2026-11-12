@@ -28,9 +28,9 @@ function contrast(a: RGB, b: RGB) {
 }
 const darken = (c: RGB, t: number): RGB => [c[0] * (1 - t), c[1] * (1 - t), c[2] * (1 - t)];
 
-export function resolveAccent(themeColor: string | null): { accent: string; hover: string } {
+export function resolveAccent(themeColor: string | null): { accent: string } {
   const white: RGB = [255, 255, 255];
-  const make = (c: RGB) => ({ accent: toHex(c), hover: toHex(darken(c, 0.14)) });
+  const make = (c: RGB) => ({ accent: toHex(c) });
   const brand = parseHex(PURPLE)!;
   const parsed = parseHex(themeColor);
   if (!parsed) return make(brand);

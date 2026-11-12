@@ -20,10 +20,8 @@ const SSR_DAYS = 3;
 const days = (slug: string): TeeTimeDay[] =>
   Object.keys(TEE_TIMES[slug] ?? {}).sort().slice(0, SSR_DAYS).map((d) => fixtureDay(slug, d)!);
 
-/** Teemeup layer with placeholders; only the slug and the nearby list change per course. */
-const teemeup = (slug: string, nearby: string[]): TeemeupLayer => ({
-  deepLinkUrl: `https://example.invalid/open?course=${slug}`, // PLACEHOLDER
-  qrImageUrl: null,
+/** Teemeup layer with placeholders; only the nearby list changes per course. */
+const teemeup = (nearby: string[]): TeemeupLayer => ({
   appStoreUrl: "https://apps.apple.com/us/app/teemeup-golf-tee-times/id6763700956", // public link on teemeup.ai
   playStoreUrl: "https://play.google.com/store/apps/details?id=com.teemeupai", // public link on teemeup.ai
   chatBaseUrl: "https://web.teemeup.example", // PLACEHOLDER: confirm the real web chat URL with the app team
@@ -68,7 +66,7 @@ export const highlandCreek: CourseData = {
     },
     faq: [], // TODO: questions golfers actually ask; do not invent
   },
-  teemeup: teemeup("highland-creek-golf-club", ["the-tradition-golf-club", "the-divide-golf-club", "waterford-golf-club"]),
+  teemeup: teemeup(["the-tradition-golf-club", "the-divide-golf-club", "waterford-golf-club"]),
   provenance: {
     geo: v2("highlandcreekgolfclub", "Get Directions link", "2026-10-23"),
     photos: v2("highlandcreekgolfclub", "banner, CourseRev CDN", "2026-10-23"),
@@ -110,7 +108,7 @@ export const tradition: CourseData = {
     policies: { maxPlayers: 4 }, // From the v2 booking page, which offers 1 to 4 players. No cancellation or dress code text was found.
     faq: [],
   },
-  teemeup: teemeup("the-tradition-golf-club", ["highland-creek-golf-club", "the-divide-golf-club", "waterford-golf-club"]),
+  teemeup: teemeup(["highland-creek-golf-club", "the-divide-golf-club", "waterford-golf-club"]),
   provenance: {
     description: { source: "Chronogolf listing for The Tradition (reworded)", retrievedOn: "2026-10-23" },
     designer: { source: "Chronogolf listing for The Tradition", retrievedOn: "2026-10-23" },
@@ -160,7 +158,7 @@ export const theDivide: CourseData = {
     },
     faq: [],
   },
-  teemeup: teemeup("the-divide-golf-club", ["highland-creek-golf-club", "the-tradition-golf-club", "waterford-golf-club"]),
+  teemeup: teemeup(["highland-creek-golf-club", "the-tradition-golf-club", "waterford-golf-club"]),
   provenance: {
     description: demo("the-divide"),
     designer: v2("thedividegolfclub", "course details"),
@@ -208,7 +206,7 @@ export const waterford: CourseData = {
     },
     faq: [],
   },
-  teemeup: teemeup("waterford-golf-club", ["the-divide-golf-club", "the-tradition-golf-club", "highland-creek-golf-club"]),
+  teemeup: teemeup(["the-divide-golf-club", "the-tradition-golf-club", "highland-creek-golf-club"]),
   provenance: {
     description: demo("waterford"),
     designer: v2("waterfordgolfclub", "course details"),
@@ -256,7 +254,7 @@ export const cottonwood: CourseData = {
     },
     faq: [],
   },
-  teemeup: teemeup("cottonwood-golf-club", []),
+  teemeup: teemeup([]),
   provenance: {
     description: demo("cottonwood"),
     phone: v2("cottonwoodgolfclub", "course details"),

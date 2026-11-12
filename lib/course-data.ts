@@ -87,9 +87,7 @@ export type CourseOps = {
 
 // ---------- 3. Teemeup layer ----------
 export type TeemeupLayer = {
-  /** Opens the app themed to this course (deep link), or null if not provisioned. */
-  deepLinkUrl: string | null;
-  qrImageUrl: string | null;
+  /** Store links for the badges on the course page and the JSON-LD (the public ones unless a course needs its own). */
   appStoreUrl: string;
   playStoreUrl: string;
   /** Base of the web chat. The page builds links like `${chatBaseUrl}?course=${slug}&q=${encodeURIComponent(prompt)}`. */

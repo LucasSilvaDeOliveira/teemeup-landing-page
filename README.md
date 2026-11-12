@@ -21,7 +21,7 @@ npm run build && npm start
 
 ## How it works
 
-- Pages are rendered on the server. Course facts, tee times (as links into the chat with Bob) and policies are in the HTML without JavaScript. JavaScript is used only for the tee time filters, the date picker and the hub location filter.
+- Pages are rendered on the server. Course facts, tee times (as links into the chat with Bob), the questions for Bob and policies are in the HTML without JavaScript. JavaScript only adds interaction: the tee time filters, the date picker, the price chart highlight, the bar at the bottom on phones and the hub location filter.
 - One object per course, `CourseData` (`lib/course-data.ts`), feeds the page, the JSON-LD, the Markdown version and `llms.txt`, so they always match.
 - The page puts Teemeup first (H1 "Book {course} tee times with Bob"); the course is the subject.
 - Publication rule: `indexabilityProblems()` in `lib/course-data.ts`. A course without the required data gets `noindex` and stays out of the sitemap, `llms.txt` and the hubs. A hub is indexed only when it lists at least 3 published courses (`HUB_MIN_COURSES`). These rules are ours, to be tuned after a pilot.
@@ -30,7 +30,8 @@ npm run build && npm start
 - App links: App Store and Google Play badges in the hero and in "Try asking Bob", and the Safari app banner on iPhone.
 - The course photo is the hero background (loaded first, served by `next/image`), and is also used for `og:image` and the JSON-LD.
 - Design: Javier Mula. Tokens and layout are in `app/globals.css`; icons are inline SVG from Phosphor (`components/Icon.tsx`), so no icon font is loaded. Shared header, footer, store badges and "Try asking Bob" are in `components/SiteChrome.tsx`.
-- Club colors: `facts.themeColor` replaces the Teemeup purple on that course page (all example clubs use the purple; set a hex color on one to see it); tints and the "Try asking Bob" gradient are mixed from it. On desktop the tee sheet stays in a column on the right; on phones a bar at the bottom brings the golfer back to it.
+- Club colors: `facts.themeColor` replaces the Teemeup purple on that course page (all example clubs use the purple; set a hex color on one to see it); tints and the "Try asking Bob" gradient are mixed from it.
+- Layout: on desktop the tee sheet stays in a column on the right while the page scrolls; on phones it comes after the hero, and a bar at the bottom brings the golfer back to it.
 
 ## What the dev team connects
 
@@ -39,6 +40,7 @@ npm run build && npm start
 | `lib/courses.ts` | Replace `getCourse()`, `listCourses()`, `getTeeTimes()` and `getNearby()` with the real source. `getCourse()` returns the first days with times; `getTeeTimes(course, date)` returns one day for the date picker. Return `null` when a course or day is unknown. Pages revalidate every 5 minutes. |
 | `lib/derive.ts` `chatLink()` | Link into the chat with Bob (`course`, `q`, `date`, `time`). A proposal: adapt it to the real deep link, ideally opening Bob with the chosen tee time already selected. |
 | `lib/fixtures.ts` | Placeholder for the chat URL (`chatBaseUrl`); same for `APP.chatBaseUrl` in `lib/config.ts`. Store links are the real ones. |
+| `public/brand/` | Logo and store badges, copied from teemeup.ai. Replace them if the brand files change. |
 | Footer | Terms and Privacy links are `#`. |
 | `app/page.tsx` | Development redirect to `/courses`. |
 

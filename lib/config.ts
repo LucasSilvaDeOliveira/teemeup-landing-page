@@ -11,7 +11,7 @@ export const indexingAllowed: boolean = siteUrl !== null && process.env.NEXT_PUB
 /**
  * Brand-level links for pages that are not about one course (the hubs). Store links are the public ones on teemeup.ai;
  * the chat URL is a PLACEHOLDER the app team confirms.
- * Course pages use the per-course values in `teemeup` (deep link, chat base).
+ * Course pages use the per-course values in `CourseData.teemeup` (store links, chat base).
  */
 export const APP = {
   chatBaseUrl: "https://web.teemeup.example",
